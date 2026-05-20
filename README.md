@@ -1,6 +1,6 @@
 # Agentforce Project
 
-This Salesforce DX project contains a sample agent called Local Info Agent that you could, for example, embed in a resort's web site. The agent provides local weather updates, shares information about local events, and helps guests with facility hours. 
+This Salesforce DX project contains a sample agent called MY Flight Agent that you could, for example, embed in a resort's web site. The agent provides local weather updates, shares information about local events, and helps guests with facility hours. 
 
 The agent demonstrates:
 
@@ -40,9 +40,9 @@ If you prefer to use other AI tools, such as Claude Code or Cursor, copy the [`a
 
 Salesforce agents use an Agent Script file as their blueprint. To vibe code an agent, you vibe code its Agent Script file. Agent Script files are part of the `AiAuthoringBundle` metadata type.
 
-Let's see how this works by vibe coding the Agent Script file associated with the sample Local Info Agent. Open up the `force-app/main/default/aiAuthoringBundle/Local_Info_Agent/Local_Info_Agent.agent` file in VS Code, then enter your prompts in the Agentforce Vibes chat box. For example, to learn more about how the agent is coded, ask questions like: 
+Let's see how this works by vibe coding the Agent Script file associated with the sample MY Flight Agent. Open up the `force-app/main/default/aiAuthoringBundle/MY_Flight_Agent/MY_Flight_Agent.agent` file in VS Code, then enter your prompts in the Agentforce Vibes chat box. For example, to learn more about how the agent is coded, ask questions like: 
 
-- _What does the Local Info Agent do?_
+- _What does the MY Flight Agent do?_
 - _What Apex classes does this agent use?_
 - _Does the agent use flows?_
 
@@ -50,9 +50,9 @@ As you get more familiar with vibe coding a Salesforce agent, you can start maki
 
 ## Preview the Agent in Simulated Mode
 
-You can preview how the agent works right in VS Code using the Agentforce DX panel. For now you must preview in _simulated mode_, because you haven't yet deployed the Apex classes, flow, or prompt template to your org. After you deploy, you can use _live mode_ in which the agent uses the actual Apex classes, etc.  In simulated mode, the Local Info Agent mocks the answers to your questions. 
+You can preview how the agent works right in VS Code using the Agentforce DX panel. For now you must preview in _simulated mode_, because you haven't yet deployed the Apex classes, flow, or prompt template to your org. After you deploy, you can use _live mode_ in which the agent uses the actual Apex classes, etc.  In simulated mode, the MY Flight Agent mocks the answers to your questions. 
 
-To preview in simulated mode, right-click the `Local_Info_Agent.agent` file and choose **AFDX: Preview This Agent**.  In the Agentforce DX panel that opens, click **Start Simulation**.  Then enter a question in the chat box at the bottom, such as `What's the weather like?`.  The agent simulates an answer. 
+To preview in simulated mode, right-click the `MY_Flight_Agent.agent` file and choose **AFDX: Preview This Agent**.  In the Agentforce DX panel that opens, click **Start Simulation**.  Then enter a question in the chat box at the bottom, such as `What's the weather like?`.  The agent simulates an answer. 
 
 ## Agentforce-Ready Scratch Orgs
 
@@ -66,11 +66,11 @@ sf org create scratch --definition-file config/project-scratch-def.json --alias 
 
 ## What's Inside This DX Project?
 
-These are the interesting metadata components associated with the Local Info Agent. All the component source files are in the `force-app/main/default` package directory under their associated metadata directory, such as `classes` for Apex classes.
+These are the interesting metadata components associated with the MY Flight Agent. All the component source files are in the `force-app/main/default` package directory under their associated metadata directory, such as `classes` for Apex classes.
 
 | Component | Type | Purpose |
 |---|---|---|
-| `Local_Info_Agent.agent` | Agent Script | The agent definition — tools, reasoning, variables, and flow control. |
+| `MY_Flight_Agent.agent` | Agent Script | The agent definition — tools, reasoning, variables, and flow control. |
 | `CheckWeather` | Apex Class | Invocable Apex. Checks current weather conditions for a given location. |
 | `CurrentDate` | Apex Class | Invocable Apex. Returns the current date for use by the agent. |
 | `WeatherService` | Apex Class | Provides mock weather data for the resort. |

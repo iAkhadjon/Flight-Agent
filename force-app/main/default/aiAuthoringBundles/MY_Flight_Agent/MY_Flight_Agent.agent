@@ -5,8 +5,8 @@ system:
         error: "Sorry, it looks like something has gone wrong."
 
 config:
-    developer_name: "Local_Info_Agent"
-    agent_label: "Local Info Agent"
+    developer_name: "MY_Flight_Agent"
+    agent_label: "MY Flight Agent"
     description: "A next-gen agent for this resort that provides local weather updates, shares information about local events, helps guests with resort facility hours, and helps guests search for available flights."
     default_agent_user: "UPDATE_WITH_YOUR_DEFAULT_AGENT_USER"
 
