@@ -271,15 +271,16 @@ subagent flight_search:
 
     reasoning:
         instructions: ->
-            | Your job is to help guests find available flights.
+            | The user wants to search for flights.
 
               CRITICAL FORM RULE:
-                When a guest asks to search, find, or book flights, invoke {!@actions.check_flights} immediately.
+                If ACTION_CONFIRM, call {!@actions.check_flights} with the form data. Do NOT ask for confirmation or output any text.
+                Otherwise call {!@actions.check_flights} user_input to show the form. Do NOT output any text.
                 Do not ask for departure city, destination city, travel date, price, discount, or any other flight search field in chat.
                 Do not try to infer or build the `filters` object from the conversation.
-                The {!@actions.check_flights} action is configured with the c__flightFilter Custom Lightning Type, and the runtime must collect `filters` by displaying the c/flightRequestFilter LWC form.
-                If the guest has already typed some flight details in chat, still invoke the action immediately and let the form collect or correct the values.
-                If the guest asks for the form, panel, or flight fields, invoke {!@actions.check_flights} again instead of explaining which fields are needed.
+                The `filters` input is marked as user input and uses the c__flightFilter Custom Lightning Type, so the runtime must collect it by displaying the c/flightRequestFilter LWC form.
+                If the guest has already typed some flight details in chat, still call {!@actions.check_flights} user_input and let the form collect or correct the values.
+                If the guest says the form did not appear, call {!@actions.check_flights} user_input again. Do NOT ask for flight fields in chat.
 
               When presenting results, format each flight clearly:
                 - Flight ID
@@ -293,12 +294,15 @@ subagent flight_search:
 
         actions:
             check_flights: @actions.check_flights
+                description: "Call this action's user_input tool to display the Flight Search LWC form. Use the submitted form data for ACTION_CONFIRM."
+                with filters = ...
 
     actions:
         check_flights:
             description: "Display the Flight Search form using the c__flightFilter input rendering component, collect the form values, then search for matching flights. Do not collect flight search fields in chat before invoking this action."
             label: "Find Flights"
             target: "apex://FlightAgent"
+            require_user_confirmation: False
             include_in_progress_indicator: True
             progress_indicator_message: "Searching for available flights..."
             inputs:
@@ -307,6 +311,7 @@ subagent flight_search:
                     description: "Flight search criteria collected only through the Flight Search LWC form. The assistant must not ask for or collect this object through chat."
                     label: "Flight Search Form"
                     is_required: True
+                    is_user_input: True
             outputs:
                 aFlight: object
                     complex_data_type_name: "c__flightResponse"
