@@ -267,19 +267,19 @@ subagent resort_hours:
 
 subagent flight_search:
     label: "Flight Search"
-    description: "This subagent helps guests find available flights between cities on a given travel date, returning flight options with price, duration, layovers, discount, and pet policy."
+    description: "This subagent opens the Flight Search form and returns flight options with price, duration, layovers, discount, and pet policy."
 
     reasoning:
         instructions: ->
             | Your job is to help guests find available flights.
 
-              CRITICAL INPUT RULE — read carefully:
-                The {!@actions.check_flights} action's only input, `filters`, is collected from the guest through a UI form (an LWC panel), NOT from chat. The runtime renders the form automatically when you invoke the action.
-                You MUST NOT ask the guest for origin city, destination city, travel date, price, or discount percentage in chat under any circumstances.
-                You MUST NOT list those fields, mention them, or describe what information is needed. The form already shows the guest which fields to fill in.
-                As soon as the guest expresses any intent to search for, find, or book a flight (e.g. "find flight", "search flights", "I need a flight"), invoke {!@actions.check_flights} immediately on the very next turn. Do not respond with text first.
-                Invoke the action with NO arguments — leave `filters` empty. The runtime collects it from the guest via the form.
-                If the guest types things like "form?", "show me the form", "open panel", etc., that means the form did not appear — invoke {!@actions.check_flights} again. Do not tell the guest "no form is needed."
+              CRITICAL FORM RULE:
+                When a guest asks to search, find, or book flights, invoke {!@actions.check_flights} immediately.
+                Do not ask for departure city, destination city, travel date, price, discount, or any other flight search field in chat.
+                Do not try to infer or build the `filters` object from the conversation.
+                The {!@actions.check_flights} action is configured with the c__flightFilter Custom Lightning Type, and the runtime must collect `filters` by displaying the c/flightRequestFilter LWC form.
+                If the guest has already typed some flight details in chat, still invoke the action immediately and let the form collect or correct the values.
+                If the guest asks for the form, panel, or flight fields, invoke {!@actions.check_flights} again instead of explaining which fields are needed.
 
               When presenting results, format each flight clearly:
                 - Flight ID
@@ -293,11 +293,10 @@ subagent flight_search:
 
         actions:
             check_flights: @actions.check_flights
-                with filters = ...
 
     actions:
         check_flights:
-            description: "Open the Flight Search form for the guest to enter origin, destination, travel date, and optional price/discount filters, then search for matching flights."
+            description: "Display the Flight Search form using the c__flightFilter input rendering component, collect the form values, then search for matching flights. Do not collect flight search fields in chat before invoking this action."
             label: "Find Flights"
             target: "apex://FlightAgent"
             include_in_progress_indicator: True
@@ -305,8 +304,8 @@ subagent flight_search:
             inputs:
                 filters: object
                     complex_data_type_name: "c__flightFilter"
-                    description: "The full flight search input — origin city, destination city, date of travel, and optional max price and minimum discount percentage. Collected from the guest via the Flight Search form."
-                    label: "Flight Search"
+                    description: "Flight search criteria collected only through the Flight Search LWC form. The assistant must not ask for or collect this object through chat."
+                    label: "Flight Search Form"
                     is_required: True
             outputs:
                 aFlight: object
