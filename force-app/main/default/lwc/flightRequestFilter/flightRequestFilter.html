@@ -1,9 +1,38 @@
 <template>
-    <lightning-card title="Price and Discount Percentage">
-        <div class="slds-var-p-horizontal_medium">
-            <!-- Price input -->
+    <lightning-card title="Flight Search">
+        <div class="slds-var-p-horizontal_medium slds-var-p-bottom_medium">
             <lightning-input
-                label="Enter Price (between 1,000 and 20,000)"
+                label="Origin City"
+                name="originCity"
+                value={originCity}
+                type="text"
+                required
+                onchange={handleInputChange}
+                read-only={readOnly}>
+            </lightning-input>
+
+            <lightning-input
+                label="Destination City"
+                name="destinationCity"
+                value={destinationCity}
+                type="text"
+                required
+                onchange={handleInputChange}
+                read-only={readOnly}>
+            </lightning-input>
+
+            <lightning-input
+                label="Date of Travel"
+                name="dateOfTravel"
+                value={dateOfTravel}
+                type="date"
+                required
+                onchange={handleInputChange}
+                read-only={readOnly}>
+            </lightning-input>
+
+            <lightning-input
+                label="Max Price (1,000 – 20,000)"
                 name="price"
                 value={price}
                 type="number"
@@ -14,9 +43,8 @@
                 read-only={readOnly}>
             </lightning-input>
 
-            <!-- Discount Percentage input -->
             <lightning-input
-                label="Enter Discount Percentage (0% to 100%)"
+                label="Min Discount Percentage (0 – 100)"
                 name="discountPercentage"
                 value={discountPercentage}
                 type="number"

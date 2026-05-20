@@ -272,8 +272,14 @@ subagent flight_search:
     reasoning:
         instructions: ->
             | Your job is to help guests find available flights.
-              Ask the guest for the origin city, destination city, and date of travel if any are missing.
-              Once you have all three, use the {!@actions.check_flights} action to search for flights.
+
+              CRITICAL INPUT RULE — read carefully:
+                The {!@actions.check_flights} action's only input, `filters`, is collected from the guest through a UI form (an LWC panel), NOT from chat. The runtime renders the form automatically when you invoke the action.
+                You MUST NOT ask the guest for origin city, destination city, travel date, price, or discount percentage in chat under any circumstances.
+                You MUST NOT list those fields, mention them, or describe what information is needed. The form already shows the guest which fields to fill in.
+                As soon as the guest expresses any intent to search for, find, or book a flight (e.g. "find flight", "search flights", "I need a flight"), invoke {!@actions.check_flights} immediately on the very next turn. Do not respond with text first.
+                Invoke the action with NO arguments — leave `filters` empty. The runtime collects it from the guest via the form.
+                If the guest types things like "form?", "show me the form", "open panel", etc., that means the form did not appear — invoke {!@actions.check_flights} again. Do not tell the guest "no form is needed."
 
               When presenting results, format each flight clearly:
                 - Flight ID
@@ -283,42 +289,25 @@ subagent flight_search:
                 - Discount percentage (if > 0, show as a saving, e.g. "15% off")
                 - Pets allowed: Yes or No
 
-              Convert dateOfTravel to yyyy-MM-dd format before passing it to the action.
               Never fabricate flight data — only present what the action returns.
 
         actions:
             check_flights: @actions.check_flights
-                with originCity = ...
-                with destinationCity = ...
-                with dateOfTravel = ...
                 with filters = ...
 
     actions:
         check_flights:
-            description: "Search for available flights between an origin and destination city on the given travel date."
+            description: "Open the Flight Search form for the guest to enter origin, destination, travel date, and optional price/discount filters, then search for matching flights."
             label: "Find Flights"
             target: "apex://FlightAgent"
             include_in_progress_indicator: True
             progress_indicator_message: "Searching for available flights..."
             inputs:
-                originCity: string
-                    description: "The city the guest is departing from."
-                    label: "Origin City"
-                    is_required: True
-                destinationCity: string
-                    description: "The city the guest wants to fly to."
-                    label: "Destination City"
-                    is_required: True
-                dateOfTravel: object
-                    complex_data_type_name: "lightning__dateType"
-                    description: "The date the guest wants to travel, in yyyy-MM-dd format."
-                    label: "Date of Travel"
-                    is_required: True
                 filters: object
                     complex_data_type_name: "c__flightFilter"
-                    description: "Optional price and discount-percentage filters the guest wants to apply to the flight search."
-                    label: "Flight Filters"
-                    is_required: False
+                    description: "The full flight search input — origin city, destination city, date of travel, and optional max price and minimum discount percentage. Collected from the guest via the Flight Search form."
+                    label: "Flight Search"
+                    is_required: True
             outputs:
                 aFlight: object
                     complex_data_type_name: "c__flightResponse"

@@ -17,17 +17,18 @@ export default class FlightRequestFilter extends LightningElement {
     }
     set value(value) {
         this._value = value;
+        this.originCity = value?.originCity || "";
+        this.destinationCity = value?.destinationCity || "";
+        this.dateOfTravel = value?.dateOfTravel || "";
+        this.price = value?.price ?? "";
+        this.discountPercentage = value?.discountPercentage ?? "";
     }
 
-    price;
-    discountPercentage;
-
-    connectedCallback() {
-        if (this.value) {
-            this.price = this.value?.price || "";
-            this.discountPercentage = this.value?.discountPercentage || "";
-        }
-    }
+    originCity = "";
+    destinationCity = "";
+    dateOfTravel = "";
+    price = "";
+    discountPercentage = "";
 
     handleInputChange(event) {
         event.stopPropagation();
@@ -37,8 +38,14 @@ export default class FlightRequestFilter extends LightningElement {
             new CustomEvent("valuechange", {
                 detail: {
                     value: {
-                        price: this.price,
-                        discountPercentage: this.discountPercentage
+                        originCity: this.originCity,
+                        destinationCity: this.destinationCity,
+                        dateOfTravel: this.dateOfTravel,
+                        price: this.price === "" ? null : Number(this.price),
+                        discountPercentage:
+                            this.discountPercentage === ""
+                                ? null
+                                : Number(this.discountPercentage)
                     }
                 }
             })
