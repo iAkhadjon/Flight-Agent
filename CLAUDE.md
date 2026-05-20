@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Salesforce DX (SFDX) project generated from the **Agentforce template**. The project name in `sfdx-project.json` is `FlightAgent`, but the bundled sample agent it ships with is the **Local Info Agent** (a resort assistant for weather, local events, and facility hours). When the user says "the agent," assume they mean `Local_Info_Agent` unless told otherwise — they may be in the process of refactoring this template into a flight agent.
+Salesforce DX (SFDX) project generated from the **Agentforce template**. The project name in `sfdx-project.json` is `FlightAgent`. The agent is `Local_Info_Agent` — a resort assistant for weather, local events, facility hours, and **flight search**. When the user says "the agent," assume they mean `Local_Info_Agent` unless told otherwise.
 
 Source API version is **66.0**. The default agent user in the Agent Script is still the placeholder `UPDATE_WITH_YOUR_DEFAULT_AGENT_USER` — set this before deploying to a real org.
 
@@ -41,18 +41,20 @@ The agent is **declared in a YAML-like Agent Script DSL**, not in Apex. `force-a
 ```
 Local_Info_Agent.agent  (Agent Script — the only file the LLM "executes")
 ├── agent_router                  start; @utils.transition to a subagent
-├── subagent local_weather   →  @actions.check_weather   →  apex://CheckWeather
-├── subagent local_events    →  @actions.check_events    →  prompt://Get_Event_Info
+├── subagent local_weather   →  @actions.check_weather    →  apex://CheckWeather
+├── subagent local_events    →  @actions.check_events     →  prompt://Get_Event_Info
 ├── subagent resort_hours    →  @actions.get_resort_hours →  flow://Get_Resort_Hours
+├── subagent flight_search   →  @actions.check_flights    →  apex://FlightAgent
 ├── subagent escalation      →  @utils.escalate
 └── subagents off_topic / ambiguous_question (guardrails, no actions)
 ```
 
-Three integration patterns are demonstrated, one per subagent — this is the main pedagogical point of the template:
+Four integration patterns are demonstrated, one per functional subagent — this is the main pedagogical point of the template:
 
 1. **Invocable Apex** (`local_weather` → `CheckWeather.cls`). `@InvocableMethod` with `WeatherRequest`/`WeatherResponse` inner classes; the script's `inputs`/`outputs` block mirrors those `@InvocableVariable`s by name and type. `CheckWeather` delegates to `WeatherService` (pure logic, mock data, no DML/callouts).
 2. **Prompt Template** (`local_events` → `Get_Event_Info.genAiPromptTemplate-meta.xml`). The action wires `Input:Event_Type` to the mutable script variable `guest_interests`. `CurrentDate.cls` exists to ground this prompt with today's date — its `Request` inner class must mirror the prompt's inputs (currently `Event_Type`).
 3. **Flow** (`resort_hours` → `Get_Resort_Hours.flow-meta.xml`). Output `reservation_required` is captured back into the script variable of the same name, then drives **deterministic branching** in the subagent's reasoning via `if @variables.reservation_required: ... else: ...`.
+4. **Invocable Apex with complex output type** (`flight_search` → `FlightAgent.cls`). `@InvocableMethod` that accepts `FlightRequest` (originCity, destinationCity, dateOfTravel, filters) and returns `FlightResponse` containing an `AvailableFlight` object (a list of `Flight` records). The output `aFlight` uses `complex_data_type_name: "c__flightResponse"`, which maps to the `lightningTypes/flightResponse` schema and the `c/flightDetails` LWC renderer.
 
 Other script features in active use, worth knowing before editing:
 
@@ -73,7 +75,9 @@ The Apex inner-class `@InvocableVariable` fields, the Agent Script `inputs`/`out
 - All Salesforce metadata lives under `force-app/main/default/<type>/`. Tests live next to the classes they cover (`*Test.cls`).
 - `manifest/package.xml` is included in `.forceignore`, so it isn't pushed/pulled — it exists for explicit deploys.
 - `config/project-scratch-def.json` enables the `Einstein1AIPlatform` feature and `agentPlatformSettings` / `einsteinGptSettings` — these are required for an Agentforce-capable scratch org and should not be removed.
-- LWC test directories (`**/__tests__/**`) and `jsconfig.json`/`.eslintrc.json` are force-ignored — this template has no LWC yet, but the ignores are pre-wired.
+- `lwc/flightDetails` is the custom renderer for flight results — it reads `this.value.flights` (the `AvailableFlight` output) and formats duration, arrival time, and pet policy for display.
+- `lightningTypes/flightResponse` declares the schema (`@apexClassType/c__AvailableFlight`) and wires the `c/flightDetails` LWC as the renderer via `lightningDesktopGenAi/renderer.json`.
+- LWC test directories (`**/__tests__/**`) and `jsconfig.json`/`.eslintrc.json` are force-ignored.
 
 ## Vibe-Coding the Agent
 

@@ -1,5 +1,5 @@
 system:
-    instructions: "You are a helpful assistant for this resort. You provide local weather updates, share information about local events, and help guests find resort facility hours."
+    instructions: "You are a helpful assistant for this resort. You provide local weather updates, share information about local events, help guests find resort facility hours, and help guests search for available flights."
     messages:
         welcome: "Hi, I'm an AI assistant for this resort. How can I help you today?"
         error: "Sorry, it looks like something has gone wrong."
@@ -7,7 +7,7 @@ system:
 config:
     developer_name: "Local_Info_Agent"
     agent_label: "Local Info Agent"
-    description: "A next-gen agent for this resort that provides local weather updates, shares information about local events, and helps guests with resort facility hours."
+    description: "A next-gen agent for this resort that provides local weather updates, shares information about local events, helps guests with resort facility hours, and helps guests search for available flights."
     default_agent_user: "UPDATE_WITH_YOUR_DEFAULT_AGENT_USER"
 
 variables:
@@ -28,6 +28,7 @@ start_agent agent_router:
             go_to_local_weather: @utils.transition to @subagent.local_weather
             go_to_local_events: @utils.transition to @subagent.local_events
             go_to_resort_hours: @utils.transition to @subagent.resort_hours
+            go_to_flight_search: @utils.transition to @subagent.flight_search
             go_to_escalation: @utils.transition to @subagent.escalation
             go_to_off_topic: @utils.transition to @subagent.off_topic
             go_to_ambiguous_question: @utils.transition to @subagent.ambiguous_question
@@ -261,5 +262,61 @@ subagent resort_hours:
                 reservation_required: boolean
                     label: "Reservation Required"
                     description: "Whether a reservation is required for this facility"
+                    is_displayable: True
+                    filter_from_agent: False
+
+subagent flight_search:
+    label: "Flight Search"
+    description: "This subagent helps guests find available flights between cities on a given travel date, returning flight options with price, duration, layovers, discount, and pet policy."
+
+    reasoning:
+        instructions: ->
+            | Your job is to help guests find available flights.
+              Ask the guest for the origin city, destination city, and date of travel if any are missing.
+              Once you have all three, use the {!@actions.check_flights} action to search for flights.
+
+              When presenting results, format each flight clearly:
+                - Flight ID
+                - Duration (convert minutes to hours and minutes, e.g. 70 min = 1 hr 10 min)
+                - Number of layovers (0 means nonstop)
+                - Price (e.g. $1,000)
+                - Discount percentage (if > 0, show as a saving, e.g. "15% off")
+                - Pets allowed: Yes or No
+
+              Convert dateOfTravel to yyyy-MM-dd format before passing it to the action.
+              Never fabricate flight data — only present what the action returns.
+
+        actions:
+            check_flights: @actions.check_flights
+                with originCity = ...
+                with destinationCity = ...
+                with dateOfTravel = ...
+
+    actions:
+        check_flights:
+            description: "Search for available flights between an origin and destination city on the given travel date."
+            label: "Find Flights"
+            target: "apex://FlightAgent"
+            include_in_progress_indicator: True
+            progress_indicator_message: "Searching for available flights..."
+            inputs:
+                originCity: string
+                    description: "The city the guest is departing from."
+                    label: "Origin City"
+                    is_required: True
+                destinationCity: string
+                    description: "The city the guest wants to fly to."
+                    label: "Destination City"
+                    is_required: True
+                dateOfTravel: object
+                    complex_data_type_name: "lightning__dateType"
+                    description: "The date the guest wants to travel, in yyyy-MM-dd format."
+                    label: "Date of Travel"
+                    is_required: True
+            outputs:
+                aFlight: object
+                    complex_data_type_name: "c__flightResponse"
+                    label: "Available Flights"
+                    description: "The available flights matching the search criteria, including flight ID, price, duration, layovers, discount, and pet policy."
                     is_displayable: True
                     filter_from_agent: False
