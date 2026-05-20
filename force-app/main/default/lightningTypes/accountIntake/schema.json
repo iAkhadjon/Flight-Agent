@@ -1,0 +1,5 @@
+{
+  "title": "Account Intake",
+  "description": "Account and contact details submitted through the Account Intake form.",
+  "lightning:type": "@apexClassType/c__AccountIntakeRequest"
+}

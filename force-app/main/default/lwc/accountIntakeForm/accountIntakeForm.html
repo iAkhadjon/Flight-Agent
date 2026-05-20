@@ -1,0 +1,65 @@
+<template>
+  <lightning-card title="Account Intake" icon-name="standard:account">
+    <div class="slds-var-p-horizontal_medium slds-var-p-bottom_medium">
+      <lightning-input
+        label="Account Name"
+        name="accountName"
+        data-field="accountName"
+        value={accountName}
+        type="text"
+        required
+        onchange={handleInputChange}
+        read-only={readOnly}
+      >
+      </lightning-input>
+
+      <lightning-input
+        label="Phone"
+        name="phone"
+        data-field="phone"
+        value={phone}
+        type="tel"
+        required
+        onchange={handleInputChange}
+        read-only={readOnly}
+      >
+      </lightning-input>
+
+      <lightning-combobox
+        label="Industry"
+        name="industry"
+        data-field="industry"
+        value={industry}
+        options={industryOptions}
+        required
+        onchange={handleInputChange}
+        disabled={readOnly}
+      >
+      </lightning-combobox>
+
+      <lightning-input
+        label="Contact Name"
+        name="contactName"
+        data-field="contactName"
+        value={contactName}
+        type="text"
+        required
+        onchange={handleInputChange}
+        read-only={readOnly}
+      >
+      </lightning-input>
+
+      <lightning-input
+        label="Contact Email"
+        name="contactEmail"
+        data-field="contactEmail"
+        value={contactEmail}
+        type="email"
+        required
+        onchange={handleInputChange}
+        read-only={readOnly}
+      >
+      </lightning-input>
+    </div>
+  </lightning-card>
+</template>

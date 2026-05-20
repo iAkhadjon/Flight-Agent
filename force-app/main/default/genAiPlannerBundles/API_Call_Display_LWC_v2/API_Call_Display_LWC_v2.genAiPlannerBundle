@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPlannerBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Collect account and contact details with a custom LWC form, then answer based on the submitted inputs.</description>
+    <localTopicLinks>
+        <genAiPluginName>GeneralFAQ_16jgK000001S5x3</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>account_intake_16jgK000001S5x3</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>agent_router_16jgK000001S5x3</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>ambiguous_question_16jgK000001S5x3</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>off_topic_16jgK000001S5x3</genAiPluginName>
+    </localTopicLinks>
+    <localTopics>
+        <fullName>agent_router_16jgK000001S5x3</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Welcome the user and determine the appropriate subagent based on user input</description>
+        <developerName>agent_router_16jgK000001S5x3</developerName>
+        <genAiPluginInstructions>
+            <description>You are an AI Agent. Use the Account Intake form when users need to submit account and contact details.
+
+The user&apos;s current context is:
+Current App Name: {!@variables.currentAppName}
+Current Object Name: {!@variables.currentObjectApiName}
+Current Page Type: {!@variables.currentPageType}
+Current Record ID: {!@variables.currentRecordId}
+
+{{state.AgentScriptInternal_agent_instructions}}</description>
+            <developerName>instruction0_179gK000001XT4L</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179gK000001XT4L</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localDeveloperName>agent_router</localDeveloperName>
+        <masterLabel>Agent Router</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>off_topic_16jgK000001S5x3</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Redirect conversation to relevant topics when user request goes off-topic</description>
+        <developerName>off_topic_16jgK000001S5x3</developerName>
+        <genAiPluginInstructions>
+            <description>You are an AI Agent. Use the Account Intake form when users need to submit account and contact details.
+
+The user&apos;s current context is:
+Current App Name: {{state.currentAppName}}
+Current Object Name: {{state.currentObjectApiName}}
+Current Page Type: {{state.currentPageType}}
+Current Record ID: {{state.currentRecordId}}</description>
+            <developerName>instruction0_179gK000001XT4I</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179gK000001XT4I</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localDeveloperName>off_topic</localDeveloperName>
+        <masterLabel>Off Topic</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>account_intake_16jgK000001S5x3</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Collect account name, phone, industry, contact name, and contact email using a custom LWC form, then answer based on the submitted details.</description>
+        <developerName>account_intake_16jgK000001S5x3</developerName>
+        <genAiPluginInstructions>
+            <description>You are an AI Agent. Use the Account Intake form when users need to submit account and contact details.
+
+The user&apos;s current context is:
+Current App Name: {{state.currentAppName}}
+Current Object Name: {{state.currentObjectApiName}}
+Current Page Type: {{state.currentPageType}}
+Current Record ID: {{state.currentRecordId}}</description>
+            <developerName>instruction0_179gK000001XT4H</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179gK000001XT4H</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>review_account_intake_179gK000001XT4H</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>review_account_intake_179gK000001XT4H</fullName>
+            <description>Display the Account Intake form using the c__accountIntake input rendering component, collect the form values, then generate a response based on the submitted account/contact details.</description>
+            <developerName>review_account_intake_179gK000001XT4H</developerName>
+            <invocationTarget>AccountIntakeAgent</invocationTarget>
+            <invocationTargetType>apex</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>review_account_intake</localDeveloperName>
+            <masterLabel>Review Account Intake</masterLabel>
+            <progressIndicatorMessage>Reviewing account details...</progressIndicatorMessage>
+        </localActions>
+        <localDeveloperName>account_intake</localDeveloperName>
+        <masterLabel>Account Intake</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>GeneralFAQ_16jgK000001S5x3</fullName>
+        <canEscalate>false</canEscalate>
+        <description>This topic is for helping answer customer&apos;s questions by searching through the knowledge articles and providing information from those articles. The questions can be about the company and its products, policies or business procedures</description>
+        <developerName>GeneralFAQ_16jgK000001S5x3</developerName>
+        <genAiPluginInstructions>
+            <description>You are an AI Agent. Use the Account Intake form when users need to submit account and contact details.
+
+The user&apos;s current context is:
+Current App Name: {{state.currentAppName}}
+Current Object Name: {{state.currentObjectApiName}}
+Current Page Type: {{state.currentPageType}}
+Current Record ID: {{state.currentRecordId}}</description>
+            <developerName>instruction0_179gK000001XT4K</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179gK000001XT4K</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>AnswerQuestionsWithKnowledge_179gK000001XT4K</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>AnswerQuestionsWithKnowledge_179gK000001XT4K</fullName>
+            <description>Answers questions about company policies and procedures, troubleshooting steps, or product information. For example: &apos;What is your return policy?&apos; &apos;How do I fix an issue?&apos; or &apos;What features does a product have?&apos;</description>
+            <developerName>AnswerQuestionsWithKnowledge_179gK000001XT4K</developerName>
+            <invocationTarget>streamKnowledgeSearch</invocationTarget>
+            <invocationTargetType>standardInvocableAction</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>AnswerQuestionsWithKnowledge</localDeveloperName>
+            <masterLabel>Answer Questions with Knowledge</masterLabel>
+            <progressIndicatorMessage>Getting answers</progressIndicatorMessage>
+            <source>EmployeeCopilot__AnswerQuestionsWithKnowledge</source>
+        </localActions>
+        <localDeveloperName>GeneralFAQ</localDeveloperName>
+        <masterLabel>General FAQ</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>ambiguous_question_16jgK000001S5x3</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Redirect conversation to relevant topics when user request is too ambiguous</description>
+        <developerName>ambiguous_question_16jgK000001S5x3</developerName>
+        <genAiPluginInstructions>
+            <description>You are an AI Agent. Use the Account Intake form when users need to submit account and contact details.
+
+The user&apos;s current context is:
+Current App Name: {{state.currentAppName}}
+Current Object Name: {{state.currentObjectApiName}}
+Current Page Type: {{state.currentPageType}}
+Current Record ID: {{state.currentRecordId}}</description>
+            <developerName>instruction0_179gK000001XT4J</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179gK000001XT4J</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localDeveloperName>ambiguous_question</localDeveloperName>
+        <masterLabel>Ambiguous Question</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <masterLabel>API Call Display LWC</masterLabel>
+    <plannerType>Atlas__ConcurrentMultiAgentOrchestration</plannerType>
+</GenAiPlannerBundle>

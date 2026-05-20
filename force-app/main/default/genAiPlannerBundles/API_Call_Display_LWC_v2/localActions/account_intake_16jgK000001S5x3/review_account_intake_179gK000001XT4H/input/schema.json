@@ -1,0 +1,14 @@
+{
+  "required" : [ "accountDetails" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "accountDetails" : {
+      "title" : "Account Intake Form",
+      "description" : "Account and contact details collected only through the Account Intake LWC form. The assistant must not ask for or collect this object through chat.",
+      "lightning:type" : "c__accountIntake",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : true
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}
