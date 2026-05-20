@@ -291,6 +291,7 @@ subagent flight_search:
                 with originCity = ...
                 with destinationCity = ...
                 with dateOfTravel = ...
+                with filters = ...
 
     actions:
         check_flights:
@@ -313,6 +314,11 @@ subagent flight_search:
                     description: "The date the guest wants to travel, in yyyy-MM-dd format."
                     label: "Date of Travel"
                     is_required: True
+                filters: object
+                    complex_data_type_name: "c__flightFilter"
+                    description: "Optional price and discount-percentage filters the guest wants to apply to the flight search."
+                    label: "Flight Filters"
+                    is_required: False
             outputs:
                 aFlight: object
                     complex_data_type_name: "c__flightResponse"

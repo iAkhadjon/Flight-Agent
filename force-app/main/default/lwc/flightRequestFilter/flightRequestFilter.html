@@ -1,0 +1,31 @@
+<template>
+    <lightning-card title="Price and Discount Percentage">
+        <div class="slds-var-p-horizontal_medium">
+            <!-- Price input -->
+            <lightning-input
+                label="Enter Price (between 1,000 and 20,000)"
+                name="price"
+                value={price}
+                type="number"
+                min="1000"
+                max="20000"
+                step="1"
+                onchange={handleInputChange}
+                read-only={readOnly}>
+            </lightning-input>
+
+            <!-- Discount Percentage input -->
+            <lightning-input
+                label="Enter Discount Percentage (0% to 100%)"
+                name="discountPercentage"
+                value={discountPercentage}
+                type="number"
+                min="0"
+                max="100"
+                step="1"
+                onchange={handleInputChange}
+                read-only={readOnly}>
+            </lightning-input>
+        </div>
+    </lightning-card>
+</template>
