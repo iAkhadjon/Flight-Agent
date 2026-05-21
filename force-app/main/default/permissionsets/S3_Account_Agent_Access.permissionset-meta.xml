@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <agentAccesses>
+        <agentName>API_Call_Display_LWC</agentName>
+        <enabled>true</enabled>
+    </agentAccesses>
     <classAccesses>
         <apexClass>S3AccountAgentAction</apexClass>
         <enabled>true</enabled>
