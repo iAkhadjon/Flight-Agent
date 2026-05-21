@@ -111,12 +111,31 @@ describe("c-s3-account-renderer", () => {
     }
   });
 
-  it("renders a loading state before a value is provided", () => {
+  it("renders the lookup form before a value is provided", () => {
     const element = createComponent();
 
     expect(
       element.shadowRoot.querySelector('[data-id="loading-state"]')
+    ).toBeNull();
+    expect(
+      element.shadowRoot.querySelector('[data-id="account-name-input"]')
     ).not.toBeNull();
+  });
+
+  it("does not render an empty result state for the initial launch payload", async () => {
+    const element = createComponent({
+      value: {
+        success: true,
+        message: null,
+        accounts: [],
+        contacts: []
+      }
+    });
+    await flushPromises();
+
+    expect(
+      element.shadowRoot.querySelector('[data-id="account-empty-state"]')
+    ).toBeNull();
     expect(
       element.shadowRoot.querySelector('[data-id="account-name-input"]')
     ).not.toBeNull();

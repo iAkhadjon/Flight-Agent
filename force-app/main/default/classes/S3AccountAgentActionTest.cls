@@ -479,6 +479,21 @@ private class S3AccountAgentActionTest {
   }
 
   @IsTest
+  static void emptyActionLaunchReturnsInitialRendererPayloadWithoutCallout() {
+    Test.startTest();
+    List<S3AccountAgentAction.S3AccountActionResponse> responses = S3AccountAgentAction.getAccountData(
+      null
+    );
+    Test.stopTest();
+
+    System.assertEquals(true, responses[0].accountData.success);
+    System.assertEquals(null, responses[0].accountData.message);
+    System.assertEquals(0, responses[0].accountData.accounts.size());
+    System.assertEquals(0, responses[0].accountData.contacts.size());
+    System.assertEquals(null, responses[0].accountData.account);
+  }
+
+  @IsTest
   static void mockModeReturnsFilteredSampleDataWithoutCallout() {
     S3AccountRequest requestConfig = new S3AccountRequest();
     requestConfig.accountName = 'Acme';

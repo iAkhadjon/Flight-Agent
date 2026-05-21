@@ -1,13 +1,12 @@
 {
-  "required" : [ "request" ],
   "unevaluatedProperties" : false,
   "properties" : {
     "request" : {
-      "title" : "Account Lookup",
-      "description" : "Account Name collected only through the Account Lookup LWC form. The assistant must not ask for or collect this object through chat.",
+      "title" : "S3 Account Request",
+      "description" : "Optional legacy request config. Leave unset so the S3 Account Data renderer appears first and collects Account Name itself.",
       "lightning:type" : "c__s3AccountRequest",
       "lightning:isPII" : false,
-      "copilotAction:isUserInput" : true
+      "copilotAction:isUserInput" : false
     }
   },
   "lightning:type" : "lightning__objectType"

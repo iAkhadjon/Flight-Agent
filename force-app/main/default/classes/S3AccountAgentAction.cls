@@ -44,8 +44,12 @@ global with sharing class S3AccountAgentAction {
 
   @TestVisible
   private static S3AccountResponse fetchAccountData(S3AccountRequest config) {
+    if (config == null) {
+      return buildInitialResponse();
+    }
+
     String requestedAccountName = normalizeSearchTerm(
-      config == null ? null : config.accountName
+      config.accountName
     );
 
     if (String.isBlank(requestedAccountName)) {
@@ -54,7 +58,7 @@ global with sharing class S3AccountAgentAction {
       );
     }
 
-    if (config != null && config.mockMode == true) {
+    if (config.mockMode == true) {
       return buildFilteredResponse(buildMockAccounts(), requestedAccountName);
     }
 
@@ -351,6 +355,16 @@ global with sharing class S3AccountAgentAction {
     S3AccountResponse response = new S3AccountResponse();
     response.success = false;
     response.message = message;
+    response.account = null;
+    response.accounts = new List<S3AccountDTO>();
+    response.contacts = new List<S3ContactDTO>();
+    return response;
+  }
+
+  private static S3AccountResponse buildInitialResponse() {
+    S3AccountResponse response = new S3AccountResponse();
+    response.success = true;
+    response.message = null;
     response.account = null;
     response.accounts = new List<S3AccountDTO>();
     response.contacts = new List<S3ContactDTO>();

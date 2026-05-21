@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GenAiPlannerBundle xmlns="http://soap.sforce.com/2006/04/metadata">
-    <description>Collect account and contact details with custom LWC forms, retrieve matching account/contact data from AWS S3, then answer based on structured action outputs.</description>
+    <description>Collect account and contact details with custom LWC forms, display the S3 Account Data LWC by default for AWS S3 account/contact lookup, then answer based on structured action outputs.</description>
     <localTopicLinks>
         <genAiPluginName>GeneralFAQ_16jgK000001SRCn</genAiPluginName>
     </localTopicLinks>
@@ -22,10 +22,10 @@
     <localTopics>
         <fullName>s3_account_data_16jgK000001SRCn</fullName>
         <canEscalate>false</canEscalate>
-        <description>Collect an Account Name, retrieve matching account and contact data from AWS S3 through the AWS_S3_Demo Named Credential, then display the response with the S3 Account Viewer LWC.</description>
+        <description>Display the S3 Account Data LWC by default. The LWC collects Account Name, retrieves matching account and contact data from AWS S3 through the AWS_S3_Demo Named Credential, and displays the response.</description>
         <developerName>s3_account_data_16jgK000001SRCn</developerName>
         <genAiPluginInstructions>
-            <description>You are an AI Agent. Use the Account Intake form when users need to submit account and contact details. Use the S3 Account Data form when users ask to retrieve or display account/contact data from AWS S3.
+            <description>You are an AI Agent. Use the Account Intake form when users need to submit account and contact details. Use the S3 Account Data form when users ask to retrieve or display account/contact data from AWS S3; this form includes its own Account Name lookup control.
 
 The user&apos;s current context is:
 Current App Name: {{state.currentAppName}}
@@ -43,7 +43,7 @@ Current Record ID: {{state.currentRecordId}}</description>
         </localActionLinks>
         <localActions>
             <fullName>get_account_data_from_s3_179gK000001XpHl</fullName>
-            <description>Displays the Account Lookup form, collects Account Name, retrieves matching account and related contact data from AWS S3 using the AWS_S3_Demo Named Credential, and displays the result.</description>
+            <description>Displays the S3 Account Data LWC form by default. The renderer collects Account Name, retrieves matching account and related contact data from AWS S3 using the AWS_S3_Demo Named Credential, and displays the result.</description>
             <developerName>get_account_data_from_s3_179gK000001XpHl</developerName>
             <invocationTarget>S3AccountAgentAction</invocationTarget>
             <invocationTargetType>apex</invocationTargetType>
@@ -63,7 +63,7 @@ Current Record ID: {{state.currentRecordId}}</description>
         <description>Welcome the user and determine the appropriate subagent based on user input</description>
         <developerName>agent_router_16jgK000001SRCn</developerName>
         <genAiPluginInstructions>
-            <description>You are an AI Agent. Use the Account Intake form when users need to submit account and contact details. Use the S3 Account Data form when users ask to retrieve or display account/contact data from AWS S3.
+            <description>You are an AI Agent. Use the Account Intake form when users need to submit account and contact details. Use the S3 Account Data form when users ask to retrieve or display account/contact data from AWS S3; this form includes its own Account Name lookup control.
 
 The user&apos;s current context is:
 Current App Name: {!@variables.currentAppName}
@@ -88,7 +88,7 @@ Current Record ID: {!@variables.currentRecordId}
         <description>This topic is for helping answer customer&apos;s questions by searching through the knowledge articles and providing information from those articles. The questions can be about the company and its products, policies or business procedures</description>
         <developerName>GeneralFAQ_16jgK000001SRCn</developerName>
         <genAiPluginInstructions>
-            <description>You are an AI Agent. Use the Account Intake form when users need to submit account and contact details. Use the S3 Account Data form when users ask to retrieve or display account/contact data from AWS S3.
+            <description>You are an AI Agent. Use the Account Intake form when users need to submit account and contact details. Use the S3 Account Data form when users ask to retrieve or display account/contact data from AWS S3; this form includes its own Account Name lookup control.
 
 The user&apos;s current context is:
 Current App Name: {{state.currentAppName}}
@@ -127,7 +127,7 @@ Current Record ID: {{state.currentRecordId}}</description>
         <description>Redirect conversation to relevant topics when user request is too ambiguous</description>
         <developerName>ambiguous_question_16jgK000001SRCn</developerName>
         <genAiPluginInstructions>
-            <description>You are an AI Agent. Use the Account Intake form when users need to submit account and contact details. Use the S3 Account Data form when users ask to retrieve or display account/contact data from AWS S3.
+            <description>You are an AI Agent. Use the Account Intake form when users need to submit account and contact details. Use the S3 Account Data form when users ask to retrieve or display account/contact data from AWS S3; this form includes its own Account Name lookup control.
 
 The user&apos;s current context is:
 Current App Name: {{state.currentAppName}}
@@ -150,7 +150,7 @@ Current Record ID: {{state.currentRecordId}}</description>
         <description>Redirect conversation to relevant topics when user request goes off-topic</description>
         <developerName>off_topic_16jgK000001SRCn</developerName>
         <genAiPluginInstructions>
-            <description>You are an AI Agent. Use the Account Intake form when users need to submit account and contact details. Use the S3 Account Data form when users ask to retrieve or display account/contact data from AWS S3.
+            <description>You are an AI Agent. Use the Account Intake form when users need to submit account and contact details. Use the S3 Account Data form when users ask to retrieve or display account/contact data from AWS S3; this form includes its own Account Name lookup control.
 
 The user&apos;s current context is:
 Current App Name: {{state.currentAppName}}
@@ -173,7 +173,7 @@ Current Record ID: {{state.currentRecordId}}</description>
         <description>Collect account name, phone, industry, contact name, and contact email using a custom LWC form, then answer based on the submitted details.</description>
         <developerName>account_intake_16jgK000001SRCn</developerName>
         <genAiPluginInstructions>
-            <description>You are an AI Agent. Use the Account Intake form when users need to submit account and contact details. Use the S3 Account Data form when users ask to retrieve or display account/contact data from AWS S3.
+            <description>You are an AI Agent. Use the Account Intake form when users need to submit account and contact details. Use the S3 Account Data form when users ask to retrieve or display account/contact data from AWS S3; this form includes its own Account Name lookup control.
 
 The user&apos;s current context is:
 Current App Name: {{state.currentAppName}}

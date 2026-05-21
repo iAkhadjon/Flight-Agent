@@ -1,6 +1,6 @@
 system:
     instructions: |
-        You are an AI Agent. Use the Account Intake form when users need to submit account and contact details. Use the S3 Account Data form when users ask to retrieve or display account/contact data from AWS S3.
+        You are an AI Agent. Use the Account Intake form when users need to submit account and contact details. Use the S3 Account Data form when users ask to retrieve or display account/contact data from AWS S3; this form includes its own Account Name lookup control.
 
         The user's current context is:
         Current App Name: {!@variables.currentAppName}
@@ -9,7 +9,7 @@ system:
         Current Record ID: {!@variables.currentRecordId}
     messages:
         welcome: |
-            Hi, I'm Agentforce! I can collect account and contact details with a form, retrieve matching account data from S3, and answer based on the returned information. How can I help?
+            Hi, I'm Agentforce! I can collect account and contact details with a form, or open the S3 Account Data form to retrieve matching account data from S3. How can I help?
         error: "Something went wrong. Try again."
 
 config:
@@ -17,7 +17,7 @@ config:
     agent_template: "EmployeeCopilot__AgentforceEmployeeAgent"
     developer_name: "API_Call_Display_LWC"
     agent_type: "AgentforceEmployeeAgent"
-    description: "Collect account and contact details with custom LWC forms, retrieve matching account/contact data from AWS S3, then answer based on structured action outputs."
+    description: "Collect account and contact details with custom LWC forms, display the S3 Account Data LWC by default for AWS S3 account/contact lookup, then answer based on structured action outputs."
 
 language:
     default_locale: "en_US"
@@ -126,33 +126,31 @@ subagent account_intake:
 
 subagent s3_account_data:
     label: "S3 Account Data"
-    description: "Collect an Account Name, retrieve matching account and contact data from AWS S3 through the AWS_S3_Demo Named Credential, then display the response with the S3 Account Viewer LWC."
+    description: "Display the S3 Account Data LWC by default. The LWC collects Account Name, retrieves matching account and contact data from AWS S3 through the AWS_S3_Demo Named Credential, and displays the response."
     reasoning:
         instructions: ->
             | The user wants to retrieve or display account and contact data from AWS S3.
 
               FORM RULE:
-                First reply exactly: "Please fill the form and submit."
-                Then call {!@actions.get_account_data_from_s3} user_input to display the Account Lookup LWC form.
-                Do not ask for Account Name in chat.
-                Do not infer or build the `request` object from the conversation.
-                The `request` input is marked as user input and uses the c__s3AccountRequest Custom Lightning Type, so the runtime must collect it by displaying the c/s3AccountEditor LWC form.
-                If ACTION_CONFIRM, call {!@actions.get_account_data_from_s3} with the submitted Account Lookup form data. Do NOT ask for confirmation.
-                If the user says the form did not appear, reply exactly: "Please fill the form and submit." Then call {!@actions.get_account_data_from_s3} user_input again.
+                Immediately call {!@actions.get_account_data_from_s3} without user_input and without outputting text first.
+                Leave the optional `request` input unset. Do not infer or build the `request` object from the conversation.
+                The action output uses the c__s3AccountViewer Custom Lightning Type, whose c/s3AccountRenderer component displays the S3 Account Data form by default.
+                Do not display or ask the user to submit the Account Lookup input form before showing S3 Account Data.
+                Do not ask for Account Name in chat; the S3 Account Data form collects Account Name and performs lookups itself.
+                If the user says the S3 Account Data form did not appear, call {!@actions.get_account_data_from_s3} again without user_input.
 
               S3 behavior:
                 The Apex action uses the AWS_S3_Demo Named Credential and defaults to /accounts.json.
                 Never ask for or expose AWS credentials.
 
-              After the action returns, summarize only the account and contact data returned by the action. Do not invent missing account or contact details.
+              After the action returns with actual account data, summarize only the account and contact data returned by the action. Do not invent missing account or contact details.
         actions:
             get_account_data_from_s3: @actions.get_account_data_from_s3
-                description: "Call this action's user_input tool to display the Account Lookup LWC form. Use the submitted Account Name for ACTION_CONFIRM."
-                with request = ...
+                description: "Call this action directly without user_input to display the S3 Account Data LWC form. Leave request unset."
 
     actions:
         get_account_data_from_s3:
-            description: "Displays the Account Lookup form, collects Account Name, retrieves matching account and related contact data from AWS S3 using the AWS_S3_Demo Named Credential, and displays the result."
+            description: "Displays the S3 Account Data LWC form by default. The renderer collects Account Name, retrieves matching account and related contact data from AWS S3 using the AWS_S3_Demo Named Credential, and displays the result."
             label: "Get Account Data From S3"
             target: "apex://S3AccountAgentAction"
             require_user_confirmation: False
@@ -161,10 +159,10 @@ subagent s3_account_data:
             inputs:
                 request: object
                     complex_data_type_name: "c__s3AccountRequest"
-                    description: "Account Name collected only through the Account Lookup LWC form. The assistant must not ask for or collect this object through chat."
-                    label: "Account Lookup"
-                    is_required: True
-                    is_user_input: True
+                    description: "Optional legacy request config. Leave unset so the S3 Account Data renderer appears first and collects Account Name itself."
+                    label: "S3 Account Request"
+                    is_required: False
+                    is_user_input: False
             outputs:
                 accountData: object
                     complex_data_type_name: "c__s3AccountViewer"

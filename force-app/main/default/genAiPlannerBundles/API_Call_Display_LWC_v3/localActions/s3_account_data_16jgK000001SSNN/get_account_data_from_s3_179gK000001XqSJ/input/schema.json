@@ -1,4 +1,5 @@
 {
+  "required" : [ ],
   "unevaluatedProperties" : false,
   "properties" : {
     "request" : {

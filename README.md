@@ -7,11 +7,11 @@ The repo also still contains the original flight/resort sample metadata, but the
 ## S3 Account Flow
 
 1. A user asks the agent for account information.
-2. The agent asks the user to fill and submit the Account Name form.
-3. `S3AccountAgentAction.getAccountData` calls AWS S3 through the `AWS_S3_Demo` Named Credential.
-4. Apex parses one or many accounts, filters by the submitted company name, and returns typed DTOs.
-5. `c/s3AccountRenderer` displays matching accounts and related contacts in the same component.
-6. The user can enter another company name in the renderer and submit again without restarting the conversation.
+2. The agent displays the `S3 Account Data` renderer immediately, without the separate Account Lookup input form.
+3. The user enters an Account Name directly in `c/s3AccountRenderer`.
+4. `S3AccountAgentAction.lookupAccounts` calls AWS S3 through the `AWS_S3_Demo` Named Credential.
+5. Apex parses one or many accounts, filters by the submitted company name, and returns typed DTOs.
+6. `c/s3AccountRenderer` displays matching accounts and related contacts in the same component.
 
 The renderer includes a configurable loading-time field from `0` to `600` seconds. Even if the S3/Apex response returns immediately, the component keeps showing the loading state until the configured time has elapsed.
 
@@ -24,7 +24,7 @@ The renderer includes a configurable loading-time field from `0` to `600` second
 | `S3AccountRequest`                                               | Request DTO for Account Name, object path, bucket override, and mock mode.     |
 | `S3AccountResponse`                                              | Response DTO with `success`, `message`, `account`, `accounts`, and `contacts`. |
 | `S3AccountDTO`, `S3ContactDTO`                                   | Typed account/contact DTOs returned to Agentforce and LWC.                     |
-| `c/s3AccountEditor`                                              | Agentforce input/editor LWC for collecting Account Name.                       |
+| `c/s3AccountEditor`                                              | Legacy optional Agentforce input/editor LWC for collecting Account Name.       |
 | `c/s3AccountRenderer`                                            | Agentforce output renderer LWC with loading, results, and re-submit support.   |
 | `lightningTypes/s3AccountRequest`                                | Custom Lightning Type registration for input.                                  |
 | `lightningTypes/s3AccountViewer`                                 | Custom Lightning Type registration for output.                                 |
@@ -168,8 +168,8 @@ Give me info for my accounts.
 
 Expected interaction:
 
-1. The agent asks the user to fill the form and submit.
-2. The user enters an Account Name such as `Acme`.
+1. The agent opens the `S3 Account Data` form immediately.
+2. The user enters an Account Name such as `Acme` in that form.
 3. Apex calls `callout:AWS_S3_Demo/accounts.json`.
 4. Matching accounts and related contacts render in `c/s3AccountRenderer`.
 5. The user can enter a different company name in the same renderer and submit again.

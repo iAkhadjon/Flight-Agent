@@ -218,7 +218,7 @@
         <includeInPrompt>false</includeInPrompt>
         <label>Routable Id</label>
     </contextVariables>
-    <description>Collect account and contact details with custom LWC forms, retrieve matching account/contact data from AWS S3, then answer based on structured action outputs.</description>
+    <description>Collect account and contact details with custom LWC forms, display the S3 Account Data LWC by default for AWS S3 account/contact lookup, then answer based on structured action outputs.</description>
     <label>API Call Display LWC</label>
     <logPrivateConversationData>false</logPrivateConversationData>
     <richContentEnabled>true</richContentEnabled>

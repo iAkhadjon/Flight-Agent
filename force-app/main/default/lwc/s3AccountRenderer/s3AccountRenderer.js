@@ -71,15 +71,19 @@ export default class S3AccountRenderer extends LightningElement {
       this.isLocalLoading ||
       this.isValueLoading ||
       this._rawValue?.loading === true ||
-      this._rawValue?.isLoading === true ||
-      (this._rawValue === undefined &&
-        !this.hasRenderedPayload &&
-        !this._payload)
+      this._rawValue?.isLoading === true
     );
   }
 
   get hasPayload() {
     return this.payload !== null && this.payload !== undefined;
+  }
+
+  get hasResultContent() {
+    return (
+      this.hasPayload &&
+      (this.hasError || this.hasAccounts || this.message !== "")
+    );
   }
 
   get isSubmitDisabled() {
@@ -221,13 +225,16 @@ export default class S3AccountRenderer extends LightningElement {
     const token = ++this.requestToken;
     this.isLocalLoading = false;
 
-    if (
-      rawValue === undefined ||
-      rawValue?.loading === true ||
-      rawValue?.isLoading === true
-    ) {
+    if (rawValue?.loading === true || rawValue?.isLoading === true) {
       this._payload = null;
       this.isValueLoading = true;
+      return;
+    }
+
+    if (rawValue === undefined) {
+      this._payload = null;
+      this.isValueLoading = false;
+      this.hasRenderedPayload = false;
       return;
     }
 
