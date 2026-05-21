@@ -1,0 +1,15 @@
+{
+  "records": [
+    {
+      "type": "Account",
+      "name": "Acme Korea",
+      "industry": "Technology"
+    },
+    {
+      "type": "Contact",
+      "firstName": "Jin",
+      "lastName": "Kim",
+      "email": "jin.kim@acme.example"
+    }
+  ]
+}
