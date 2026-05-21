@@ -46,3 +46,7 @@ $RECYCLE.BIN/
 **/__pycache__/
 **/.venv/
 **/venv/
+**/.vscode/
+
+# Salesforce external credentials file
+**/externalCredentials/
