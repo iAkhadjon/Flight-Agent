@@ -141,7 +141,7 @@ describe("c-s3-account-renderer", () => {
     ).not.toBeNull();
   });
 
-  it("renders multiple account results with related contact tables", async () => {
+  it("renders multiple account results with related contact lists", async () => {
     const element = createComponent({
       value: MULTI_ACCOUNT_RESPONSE
     });
@@ -155,14 +155,17 @@ describe("c-s3-account-renderer", () => {
     const accountCards = element.shadowRoot.querySelectorAll(
       '[data-id="account-card"]'
     );
-    const contactTables = element.shadowRoot.querySelectorAll(
-      '[data-id="contacts-table"]'
+    const contactLists = element.shadowRoot.querySelectorAll(
+      '[data-id="contacts-list"]'
+    );
+    const contactRows = element.shadowRoot.querySelectorAll(
+      '[data-id="contact-row"]'
     );
 
     expect(accountCards).toHaveLength(2);
-    expect(contactTables).toHaveLength(2);
-    expect(contactTables[0].data).toHaveLength(2);
-    expect(contactTables[1].data[0].firstName).toBe("Hana");
+    expect(contactLists).toHaveLength(2);
+    expect(contactRows).toHaveLength(3);
+    expect(contactRows[2].textContent).toContain("Hana Sato");
   });
 
   it("keeps backward compatibility with a single account payload", async () => {
@@ -193,9 +196,10 @@ describe("c-s3-account-renderer", () => {
       element.shadowRoot.querySelectorAll('[data-id="account-card"]')
     ).toHaveLength(1);
     expect(
-      element.shadowRoot.querySelector('[data-id="contacts-table"]').data
+      element.shadowRoot.querySelectorAll('[data-id="contact-row"]')
     ).toHaveLength(1);
     expect(element.shadowRoot.textContent).toContain("Acme Korea");
+    expect(element.shadowRoot.textContent).toContain("Jin Kim");
   });
 
   it("renders an error state when the action reports failure", async () => {
@@ -213,7 +217,7 @@ describe("c-s3-account-renderer", () => {
     ).not.toBeNull();
     expect(element.shadowRoot.textContent).toContain("HTTP 403");
     expect(
-      element.shadowRoot.querySelector('[data-id="contacts-table"]')
+      element.shadowRoot.querySelector('[data-id="contacts-list"]')
     ).toBeNull();
   });
 

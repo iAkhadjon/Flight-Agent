@@ -1,13 +1,6 @@
 import { LightningElement, api } from "lwc";
 import lookupAccounts from "@salesforce/apex/S3AccountAgentAction.lookupAccounts";
 
-const CONTACT_COLUMNS = [
-  { label: "First Name", fieldName: "firstName" },
-  { label: "Last Name", fieldName: "lastName" },
-  { label: "Email", fieldName: "email", type: "email" },
-  { label: "Title", fieldName: "title" }
-];
-
 const fallback = (value) => {
   if (value === null || value === undefined || value === "") {
     return "Not provided";
@@ -35,7 +28,6 @@ export default class S3AccountRenderer extends LightningElement {
   _rawValue;
   requestToken = 0;
 
-  columns = CONTACT_COLUMNS;
   accountName = "";
   loadingTimeSeconds = String(DEFAULT_MINIMUM_LOADING_MS / 1000);
   isLocalLoading = false;
@@ -144,12 +136,22 @@ export default class S3AccountRenderer extends LightningElement {
           id: contact.id || `${contact.email || "contact"}-${contactIndex}`,
           firstName: fallback(contact.firstName),
           lastName: fallback(contact.lastName),
+          fullName: this.formatContactName(contact),
           email: fallback(contact.email),
+          emailHref: contact.email ? `mailto:${contact.email}` : "#",
           title: fallback(contact.title)
         })),
         hasContacts: contacts.length > 0
       };
     });
+  }
+
+  formatContactName(contact) {
+    const nameParts = [contact.firstName, contact.lastName].filter(
+      (value) => value !== null && value !== undefined && value !== ""
+    );
+
+    return nameParts.length > 0 ? nameParts.join(" ") : "Not provided";
   }
 
   get hasAccounts() {

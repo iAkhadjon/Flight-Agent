@@ -1,6 +1,6 @@
 <template>
   <lightning-card title="S3 Account Data" icon-name="standard:account">
-    <div class="slds-var-p-horizontal_medium slds-var-p-bottom_medium">
+    <div class="card-body">
       <form class="lookup-form" onsubmit={handleLookupSubmit}>
         <div class="lookup-fields">
           <lightning-input
@@ -108,15 +108,36 @@
                       <h3 class="section-title">Related Contacts</h3>
 
                       <template if:true={account.hasContacts}>
-                        <lightning-datatable
-                          key-field="id"
-                          data={account.contactRows}
-                          columns={columns}
-                          hide-checkbox-column
-                          resize-column-disabled
-                          data-id="contacts-table"
-                        >
-                        </lightning-datatable>
+                        <div class="contact-list" data-id="contacts-list">
+                          <template
+                            for:each={account.contactRows}
+                            for:item="contact"
+                          >
+                            <article
+                              key={contact.id}
+                              class="contact-item"
+                              data-id="contact-row"
+                            >
+                              <div class="contact-name">
+                                {contact.fullName}
+                              </div>
+                              <dl class="contact-details">
+                                <div>
+                                  <dt>Email</dt>
+                                  <dd>
+                                    <a href={contact.emailHref}>
+                                      {contact.email}
+                                    </a>
+                                  </dd>
+                                </div>
+                                <div>
+                                  <dt>Title</dt>
+                                  <dd>{contact.title}</dd>
+                                </div>
+                              </dl>
+                            </article>
+                          </template>
+                        </div>
                       </template>
 
                       <template if:false={account.hasContacts}>
