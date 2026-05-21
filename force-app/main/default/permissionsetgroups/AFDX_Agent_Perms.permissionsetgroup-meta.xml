@@ -4,6 +4,7 @@
     <hasActivationRequired>false</hasActivationRequired>
     <label>AFDX Agent Perms</label>
     <permissionSets>Resort_Agent</permissionSets>
+    <permissionSets>S3_Account_Agent_Access</permissionSets>
     <permissionSets>force__AgentforceServiceAgentBase</permissionSets>
     <permissionSets>force__AgentforceServiceAgentUser</permissionSets>
     <permissionSets>force__EinsteinGPTPromptTemplateUser</permissionSets>

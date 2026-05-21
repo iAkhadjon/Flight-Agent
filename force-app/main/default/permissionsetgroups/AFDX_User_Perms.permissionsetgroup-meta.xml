@@ -4,6 +4,7 @@
     <hasActivationRequired>false</hasActivationRequired>
     <label>AFDX User Perms</label>
     <permissionSets>Resort_Admin</permissionSets>
+    <permissionSets>S3_Account_Agent_Access</permissionSets>
     <permissionSets>force__AgentforceServiceAgentBuilder</permissionSets>
     <permissionSets>force__CopilotSalesforceAdmin</permissionSets>
     <permissionSets>force__CopilotSalesforceUser</permissionSets>
