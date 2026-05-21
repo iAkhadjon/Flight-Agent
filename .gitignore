@@ -50,3 +50,5 @@ $RECYCLE.BIN/
 
 # Salesforce external credentials file
 **/externalCredentials/
+!force-app/main/default/externalCredentials/
+!force-app/main/default/externalCredentials/AWS_S3_Demo.externalCredential-meta.xml
