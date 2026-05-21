@@ -30,6 +30,14 @@
     </types>
     <types>
         <members>*</members>
+        <name>LightningComponentBundle</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>LightningTypeBundle</name>
+    </types>
+    <types>
+        <members>*</members>
         <name>PermissionSet</name>
     </types>
     <types>

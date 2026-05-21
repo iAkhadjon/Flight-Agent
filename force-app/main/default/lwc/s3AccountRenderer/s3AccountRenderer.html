@@ -1,0 +1,89 @@
+<template>
+  <lightning-card title="S3 Account Data" icon-name="standard:account">
+    <div class="slds-var-p-horizontal_medium slds-var-p-bottom_medium">
+      <template if:true={isLoading}>
+        <div class="loading-state" data-id="loading-state">
+          <lightning-spinner
+            alternative-text="Loading account data"
+            size="small"
+          ></lightning-spinner>
+        </div>
+      </template>
+
+      <template if:false={isLoading}>
+        <template if:true={hasError}>
+          <div
+            class="slds-notify slds-notify_alert slds-alert_error"
+            role="alert"
+            data-id="error-state"
+          >
+            <span class="slds-assistive-text">Error</span>
+            <h2>{errorMessage}</h2>
+          </div>
+        </template>
+
+        <template if:false={hasError}>
+          <template if:true={hasAccount}>
+            <section class="account-summary" data-id="account-summary">
+              <dl class="account-grid">
+                <div class="summary-item">
+                  <dt>Account Name</dt>
+                  <dd>{accountName}</dd>
+                </div>
+                <div class="summary-item">
+                  <dt>Industry</dt>
+                  <dd>{accountIndustry}</dd>
+                </div>
+                <div class="summary-item">
+                  <dt>Phone</dt>
+                  <dd>{accountPhone}</dd>
+                </div>
+                <div class="summary-item">
+                  <dt>Website</dt>
+                  <dd>
+                    <template if:true={hasWebsite}>
+                      <a href={websiteUrl} target="_blank" rel="noopener">
+                        {accountWebsite}
+                      </a>
+                    </template>
+                    <template if:false={hasWebsite}>
+                      <span>{accountWebsite}</span>
+                    </template>
+                  </dd>
+                </div>
+              </dl>
+            </section>
+          </template>
+
+          <template if:false={hasAccount}>
+            <div class="empty-state" data-id="account-empty-state">
+              No account data was returned.
+            </div>
+          </template>
+
+          <section class="contacts-section">
+            <h3 class="section-title">Contacts</h3>
+
+            <template if:true={hasContacts}>
+              <lightning-datatable
+                key-field="id"
+                data={contactRows}
+                columns={columns}
+                hide-checkbox-column
+                resize-column-disabled
+                data-id="contacts-table"
+              >
+              </lightning-datatable>
+            </template>
+
+            <template if:false={hasContacts}>
+              <div class="empty-state" data-id="contacts-empty-state">
+                No contacts were returned.
+              </div>
+            </template>
+          </section>
+        </template>
+      </template>
+    </div>
+  </lightning-card>
+</template>
