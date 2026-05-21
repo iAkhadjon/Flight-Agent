@@ -1,0 +1,14 @@
+{
+  "required" : [ "request" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "request" : {
+      "title" : "Account Lookup",
+      "description" : "Account Name collected only through the Account Lookup LWC form. The assistant must not ask for or collect this object through chat.",
+      "lightning:type" : "c__s3AccountRequest",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : true
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

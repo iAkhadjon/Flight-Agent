@@ -1,101 +1,185 @@
-# Agentforce Project
+# Agentforce Custom API Calls
 
-This Salesforce DX project contains a sample agent called MY Flight Agent that you could, for example, embed in a resort's web site. The agent provides local weather updates, shares information about local events, and helps guests with facility hours. 
+This Salesforce DX project demonstrates Agentforce actions that call external APIs and render structured results with Custom Lightning Types. The primary implementation in this repo is an AWS S3 account lookup flow that retrieves account/contact JSON and displays it inside Agentforce.
 
-The agent demonstrates:
+The repo also still contains the original flight/resort sample metadata, but the active custom integration is the `API_Call_Display_LWC` agent with the S3 account action.
 
-- Three types of subagents (Invocable Apex, Prompt Template, and Flow).
-- Mutable variables.
-- Flow control with `available when`.
-- Deterministic branching with `if/else` in reasoning instructions.
+## S3 Account Flow
+
+1. A user asks the agent for account information.
+2. The agent asks the user to fill and submit the Account Name form.
+3. `S3AccountAgentAction.getAccountData` calls AWS S3 through the `AWS_S3_Demo` Named Credential.
+4. Apex parses one or many accounts, filters by the submitted company name, and returns typed DTOs.
+5. `c/s3AccountRenderer` displays matching accounts and related contacts in the same component.
+6. The user can enter another company name in the renderer and submit again without restarting the conversation.
+
+The renderer includes a configurable loading-time field from `0` to `600` seconds. Even if the S3/Apex response returns immediately, the component keeps showing the loading state until the configured time has elapsed.
+
+## Key Metadata
+
+| Metadata                                                         | Purpose                                                                        |
+| ---------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| `force-app/main/default/aiAuthoringBundles/API_Call_Display_LWC` | Agentforce authoring bundle for the custom API call demo agent.                |
+| `S3AccountAgentAction`                                           | Invocable Apex action and direct LWC Apex lookup method.                       |
+| `S3AccountRequest`                                               | Request DTO for Account Name, object path, bucket override, and mock mode.     |
+| `S3AccountResponse`                                              | Response DTO with `success`, `message`, `account`, `accounts`, and `contacts`. |
+| `S3AccountDTO`, `S3ContactDTO`                                   | Typed account/contact DTOs returned to Agentforce and LWC.                     |
+| `c/s3AccountEditor`                                              | Agentforce input/editor LWC for collecting Account Name.                       |
+| `c/s3AccountRenderer`                                            | Agentforce output renderer LWC with loading, results, and re-submit support.   |
+| `lightningTypes/s3AccountRequest`                                | Custom Lightning Type registration for input.                                  |
+| `lightningTypes/s3AccountViewer`                                 | Custom Lightning Type registration for output.                                 |
+| `AWS_S3_Demo` Named Credential / External Credential             | S3 callout configuration.                                                      |
+| `S3_Account_Agent_Access`                                        | Permission set for Apex access.                                                |
+
+## S3 Data Contract
+
+The default object path is:
+
+```text
+/accounts.json
+```
+
+If `/accounts.json` returns `403` or `404`, Apex falls back to:
+
+```text
+/account.json
+```
+
+Preferred multi-account shape:
+
+```json
+{
+  "accounts": [
+    {
+      "id": "001DEMO000001",
+      "name": "Acme Korea",
+      "industry": "Technology",
+      "phone": "+82-2-1234-5678",
+      "website": "https://www.acme.example"
+    }
+  ],
+  "contacts": [
+    {
+      "id": "003DEMO000001",
+      "accountId": "001DEMO000001",
+      "firstName": "Jin",
+      "lastName": "Kim",
+      "email": "jin.kim@acme.example",
+      "title": "VP Sales"
+    }
+  ]
+}
+```
+
+The parser also supports the older single-account shape with top-level `account` and `contacts`, and array envelope shapes used during testing.
 
 ## Prerequisites
 
-- **Salesforce Developer Edition (DE)** org. Get a free one at [developer.salesforce.com/signup](https://developer.salesforce.com/signup). 
-- **Salesforce CLI** (`sf`). Download and install it from [developer.salesforce.com/tools/sfdxcli](https://developer.salesforce.com/tools/sfdxcli).  See the [Salesforce CLI Setup Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli.htm) for more detailed information. 
-- **VS Code** with the **Salesforce Extensions** pack and the **Agentforce DX** extension. See [Install Pro-Code Tools](https://developer.salesforce.com/docs/ai/agentforce/guide/agent-dx-set-up-env.html) for details. 
+- Salesforce CLI (`sf`)
+- Node.js and npm for LWC Jest tests
+- Agentforce-enabled Salesforce org
+- AWS S3 object containing account/contact JSON
+- Salesforce Named Credential with API name `AWS_S3_Demo`
+- External Credential principal and user permission assignment for the S3 credential
 
-After you get a DE org and set up your tools, authorize the org so you can start working with it.  Open VS Code and use the **SFDX: Authorize an Org** VS Code command from the Command Palette, or run this CLI command in VS Code's integrated terminal:
-
-```bash
-sf org login web --alias my-de-org --set-default
-```
-Log in to the browser that opens using your DE credentials.  
-
-## Configure Your Salesforce DX Project
-
-Your new Salesforce DX project is ready to use.  
-
-But you can further configure it by editing the `sfdx-project.json` file. See [Salesforce DX Project Configuration](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ws_config.htm) in the _Salesforce DX Developer Guide_ for details about this file. 
-
-## Enable Skills in Agentforce Vibes to Vibe Code Agents
-
-To vibe code agents using Agentforce Vibes, first open the Agentforce Vibes panel. Click the **Manage Agentforce Rules, Workflows, Hooks & Skills** icon, then the **Skills** tab, and ensure the `agentforce-development` skill is enabled.  That's it!
-
-### Use Other AI Tools
-
-If you prefer to use other AI tools, such as Claude Code or Cursor, copy the [`agentforce-development` skills](https://github.com/forcedotcom/afv-library/tree/main/skills/agentforce-development) from the `afv-library` GitHub repository to the appropriate directory in this DX project. Check your AI tool's documentation for the specific location and how to enable the skills.  
-
-## Vibe Code the Sample Agent
-
-Salesforce agents use an Agent Script file as their blueprint. To vibe code an agent, you vibe code its Agent Script file. Agent Script files are part of the `AiAuthoringBundle` metadata type.
-
-Let's see how this works by vibe coding the Agent Script file associated with the sample MY Flight Agent. Open up the `force-app/main/default/aiAuthoringBundle/MY_Flight_Agent/MY_Flight_Agent.agent` file in VS Code, then enter your prompts in the Agentforce Vibes chat box. For example, to learn more about how the agent is coded, ask questions like: 
-
-- _What does the MY Flight Agent do?_
-- _What Apex classes does this agent use?_
-- _Does the agent use flows?_
-
-As you get more familiar with vibe coding a Salesforce agent, you can start making actual changes to the Agent Script file.
-
-## Preview the Agent in Simulated Mode
-
-You can preview how the agent works right in VS Code using the Agentforce DX panel. For now you must preview in _simulated mode_, because you haven't yet deployed the Apex classes, flow, or prompt template to your org. After you deploy, you can use _live mode_ in which the agent uses the actual Apex classes, etc.  In simulated mode, the MY Flight Agent mocks the answers to your questions. 
-
-To preview in simulated mode, right-click the `MY_Flight_Agent.agent` file and choose **AFDX: Preview This Agent**.  In the Agentforce DX panel that opens, click **Start Simulation**.  Then enter a question in the chat box at the bottom, such as `What's the weather like?`.  The agent simulates an answer. 
-
-## Agentforce-Ready Scratch Orgs
-
-This template includes a scratch org configuration file (`config/project-scratch-def.json`) that contains the required settings and features for creating an Agentforce-ready scratch org. 
-
-Here's an example of creating a scratch org using the file; it assumes you've already authorized the Dev Hub org with alias `DevHub`:
+Authorize your target org:
 
 ```bash
-sf org create scratch --definition-file config/project-scratch-def.json --alias AgentScratchOrg --set-default --target-dev-hub DevHub
+sf org login web --alias webCrawling --set-default
 ```
 
-## What's Inside This DX Project?
+Install local dependencies:
 
-These are the interesting metadata components associated with the MY Flight Agent. All the component source files are in the `force-app/main/default` package directory under their associated metadata directory, such as `classes` for Apex classes.
+```bash
+npm install
+```
 
-| Component | Type | Purpose |
-|---|---|---|
-| `MY_Flight_Agent.agent` | Agent Script | The agent definition — tools, reasoning, variables, and flow control. |
-| `CheckWeather` | Apex Class | Invocable Apex. Checks current weather conditions for a given location. |
-| `CurrentDate` | Apex Class | Invocable Apex. Returns the current date for use by the agent. |
-| `WeatherService` | Apex Class | Provides mock weather data for the resort. |
-| `Get_Event_Info` | Prompt Template | Retrieves local events.|
-| `Get_Resort_Hours` | Flow | Returns facility hours and reservation requirements. |
-| `Resort_Agent` | Permission Set | Agent user permissions (Einstein Agent license). |
-| `Resort_Admin` | Permission Set | Admin/developer Apex class access. |
-| `AFDX_Agent_Perms` | Permission Set Group | Bundles agent user permissions for assignment. |
-| `AFDX_User_Perms` | Permission Set Group | Bundles admin user permissions for assignment. |
+## Deploy
 
-## Next Steps
+Deploy Salesforce metadata:
 
-This README provides just a taste of working with Salesforce agents. Check out the [_Agentforce DX Developer Guide_](https://developer.salesforce.com/docs/einstein/genai/guide/agent-dx.html) which shows you how to:
+```bash
+sf project deploy start \
+  --source-dir force-app/main/default/classes \
+  --source-dir force-app/main/default/lwc \
+  --source-dir force-app/main/default/lightningTypes \
+  --source-dir force-app/main/default/namedCredentials \
+  --source-dir force-app/main/default/externalCredentials \
+  --source-dir force-app/main/default/permissionsets \
+  --source-dir force-app/main/default/permissionsetgroups \
+  --test-level RunSpecifiedTests \
+  --tests S3AccountAgentActionTest \
+  --target-org webCrawling \
+  --wait 10
+```
 
-- Author an agent, which involves generating an authoring bundle, coding the Agent Script file, and publishing the agent to your org.
-- Preview and debug an agent.
-- Test an agent.
+Validate and publish the Agentforce authoring bundle:
 
-## Read All About It
+```bash
+sf agent validate authoring-bundle \
+  --api-name API_Call_Display_LWC \
+  --target-org webCrawling
 
-- [_Agentforce DX Developer Guide_](https://developer.salesforce.com/docs/einstein/genai/guide/agent-dx.html)
-- [_Agent Script_](https://developer.salesforce.com/docs/ai/agentforce/guide/agent-script.html)
-- [_Agentforce Vibes Extension_](https://developer.salesforce.com/docs/platform/einstein-for-devs/guide/einstein-overview.html)
+sf agent publish authoring-bundle \
+  --api-name API_Call_Display_LWC \
+  --target-org webCrawling
+```
 
-- [_Salesforce Extensions for VS Code_](https://developer.salesforce.com/docs/platform/sfvscode-extensions/guide)
-- [_Salesforce CLI Setup Guide_](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_intro.htm)
-- [_Salesforce DX Developer Guide_](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_intro.htm)
-- [_Salesforce CLI Command Reference_](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference.htm)
+Assign permissions to the user or agent user:
+
+```bash
+sf org assign permset \
+  --name S3_Account_Agent_Access \
+  --target-org webCrawling
+```
+
+## Test
+
+Run Apex tests:
+
+```bash
+sf apex run test \
+  --class-names S3AccountAgentActionTest \
+  --result-format human \
+  --code-coverage \
+  --target-org webCrawling \
+  --wait 10
+```
+
+Run LWC unit tests:
+
+```bash
+npm run test:unit
+```
+
+Run only the S3 renderer tests:
+
+```bash
+npm run test:unit -- -- --runTestsByPath force-app/main/default/lwc/s3AccountRenderer/__tests__/s3AccountRenderer.test.js
+```
+
+## Use in Agentforce
+
+Try a prompt such as:
+
+```text
+Give me info for my accounts.
+```
+
+Expected interaction:
+
+1. The agent asks the user to fill the form and submit.
+2. The user enters an Account Name such as `Acme`.
+3. Apex calls `callout:AWS_S3_Demo/accounts.json`.
+4. Matching accounts and related contacts render in `c/s3AccountRenderer`.
+5. The user can enter a different company name in the same renderer and submit again.
+
+## Troubleshooting
+
+- `403` or missing credentials: check the External Credential principal, Named Credential setup, and permission assignment.
+- `404`: confirm that `accounts.json` exists in the expected S3 path. The code will retry `account.json` for compatibility.
+- `No accounts matched`: the S3 call succeeded, but no account name contained the submitted search text.
+- `malformed JSON`: validate the S3 object body and remove invalid wrappers. Markdown fenced JSON is tolerated, but raw JSON is preferred.
+- Results appear delayed: this is expected when the renderer loading-time option is greater than `0`; the maximum is `600` seconds.
+
+More detailed setup notes are in [docs/s3-account-agent-setup.md](docs/s3-account-agent-setup.md).

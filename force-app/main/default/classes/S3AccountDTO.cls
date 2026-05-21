@@ -14,4 +14,7 @@ global class S3AccountDTO {
 
   @AuraEnabled
   global String website;
+
+  @AuraEnabled
+  global List<S3ContactDTO> contacts;
 }

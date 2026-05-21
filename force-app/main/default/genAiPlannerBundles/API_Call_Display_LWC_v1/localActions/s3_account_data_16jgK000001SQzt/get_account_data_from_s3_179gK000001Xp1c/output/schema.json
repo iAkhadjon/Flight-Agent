@@ -1,0 +1,14 @@
+{
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "accountData" : {
+      "title" : "S3 Account Data",
+      "description" : "Structured account and contact data retrieved from AWS S3, including success status, message, account details, and contacts.",
+      "lightning:type" : "c__s3AccountViewer",
+      "lightning:isPII" : false,
+      "copilotAction:isDisplayable" : true,
+      "copilotAction:isUsedByPlanner" : true
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

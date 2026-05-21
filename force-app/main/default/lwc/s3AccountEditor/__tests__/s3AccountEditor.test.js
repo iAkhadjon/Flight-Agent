@@ -21,68 +21,76 @@ describe("c-s3-account-editor", () => {
     }
   });
 
-  it("uses account.json as the default object path", () => {
+  it("renders only the Account Name input", () => {
     const element = createComponent();
-    const pathInput = element.shadowRoot.querySelector(
-      '[data-field="s3ObjectPath"]'
+    const accountNameInput = element.shadowRoot.querySelector(
+      '[data-field="accountName"]'
     );
 
-    expect(pathInput.value).toBe("/account.json");
+    expect(accountNameInput).not.toBeNull();
+    expect(accountNameInput.required).toBe(true);
+    expect(
+      element.shadowRoot.querySelector('[data-field="s3ObjectPath"]')
+    ).toBeNull();
+    expect(
+      element.shadowRoot.querySelector('[data-field="bucketOverride"]')
+    ).toBeNull();
+    expect(
+      element.shadowRoot.querySelector('[data-field="mockMode"]')
+    ).toBeNull();
   });
 
-  it("dispatches normalized S3 object path changes", () => {
+  it("dispatches account lookup values with the default accounts.json path", () => {
     const element = createComponent();
     const handler = jest.fn();
     element.addEventListener("valuechange", handler);
 
-    const pathInput = element.shadowRoot.querySelector(
-      '[data-field="s3ObjectPath"]'
+    const accountNameInput = element.shadowRoot.querySelector(
+      '[data-field="accountName"]'
     );
-    pathInput.dispatchEvent(
+    accountNameInput.dispatchEvent(
       new CustomEvent("change", {
         detail: {
-          value: "folder/account data.json"
+          value: "  Acme Korea  "
         }
       })
     );
 
     expect(handler).toHaveBeenCalledTimes(1);
+    expect(handler.mock.calls[0][0].detail.value.accountName).toBe(
+      "Acme Korea"
+    );
     expect(handler.mock.calls[0][0].detail.value.s3ObjectPath).toBe(
-      "/folder/account data.json"
+      "/accounts.json"
     );
   });
 
-  it("dispatches bucket override and mock mode changes", () => {
-    const element = createComponent();
+  it("preserves existing hidden config values while changing account name", () => {
+    const element = createComponent({
+      accountName: "Old Name",
+      s3ObjectPath: "/custom/accounts.json",
+      bucketOverride: "demo-bucket",
+      mockMode: true
+    });
     const handler = jest.fn();
     element.addEventListener("valuechange", handler);
 
-    const bucketInput = element.shadowRoot.querySelector(
-      '[data-field="bucketOverride"]'
+    const accountNameInput = element.shadowRoot.querySelector(
+      '[data-field="accountName"]'
     );
-    bucketInput.dispatchEvent(
+    accountNameInput.dispatchEvent(
       new CustomEvent("change", {
         detail: {
-          value: "demo-bucket"
+          value: "Acme Japan"
         }
       })
     );
 
-    const mockToggle = element.shadowRoot.querySelector(
-      '[data-field="mockMode"]'
-    );
-    mockToggle.dispatchEvent(
-      new CustomEvent("change", {
-        detail: {
-          checked: true
-        }
-      })
-    );
-
-    expect(handler).toHaveBeenCalledTimes(2);
-    expect(handler.mock.calls[0][0].detail.value.bucketOverride).toBe(
-      "demo-bucket"
-    );
-    expect(handler.mock.calls[1][0].detail.value.mockMode).toBe(true);
+    expect(handler.mock.calls[0][0].detail.value).toEqual({
+      accountName: "Acme Japan",
+      s3ObjectPath: "/custom/accounts.json",
+      bucketOverride: "demo-bucket",
+      mockMode: true
+    });
   });
 });

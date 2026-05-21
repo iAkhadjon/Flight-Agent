@@ -1,12 +1,50 @@
+.lookup-form {
+  border-bottom: 1px solid var(--slds-g-color-border-base-1, #dddbda);
+  display: grid;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+}
+
+.lookup-fields {
+  align-items: end;
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: minmax(12rem, 1fr) minmax(10rem, 13rem);
+}
+
+.lookup-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .loading-state {
   min-height: 4rem;
   position: relative;
 }
 
-.account-summary {
+.result-message {
+  color: var(--slds-g-color-neutral-base-30, #706e6b);
+  margin: 0 0 0.75rem;
+}
+
+.accounts-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.account-section {
   border: 1px solid var(--slds-g-color-border-base-1, #dddbda);
   border-radius: 0.25rem;
-  margin-bottom: 1rem;
+  padding: 1rem;
+}
+
+.account-title {
+  color: var(--slds-g-color-neutral-base-10, #181818);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.25rem;
+  margin: 0 0 0.75rem;
 }
 
 .account-grid {
@@ -16,13 +54,19 @@
 }
 
 .summary-item {
-  border-bottom: 1px solid var(--slds-g-color-border-base-1, #dddbda);
+  border-top: 1px solid var(--slds-g-color-border-base-1, #dddbda);
   min-width: 0;
-  padding: 0.75rem;
+  padding: 0.75rem 0;
 }
 
-.summary-item:nth-last-child(-n + 2) {
-  border-bottom: 0;
+.summary-item:nth-child(1),
+.summary-item:nth-child(2) {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.summary-item-full {
+  grid-column: 1 / -1;
 }
 
 .summary-item dt {
@@ -42,12 +86,12 @@
 }
 
 .contacts-section {
-  margin-top: 1rem;
+  margin-top: 0.75rem;
 }
 
 .section-title {
   color: var(--slds-g-color-neutral-base-10, #181818);
-  font-size: 1rem;
+  font-size: 0.875rem;
   font-weight: 600;
   line-height: 1.25rem;
   margin: 0 0 0.75rem;
@@ -61,15 +105,24 @@
 }
 
 @media (max-width: 480px) {
+  .lookup-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .lookup-actions {
+    justify-content: stretch;
+  }
+
+  .lookup-actions lightning-button {
+    width: 100%;
+  }
+
   .account-grid {
     grid-template-columns: 1fr;
   }
 
-  .summary-item:nth-last-child(-n + 2) {
-    border-bottom: 1px solid var(--slds-g-color-border-base-1, #dddbda);
-  }
-
-  .summary-item:last-child {
-    border-bottom: 0;
+  .summary-item:nth-child(2) {
+    border-top: 1px solid var(--slds-g-color-border-base-1, #dddbda);
+    padding-top: 0.75rem;
   }
 }

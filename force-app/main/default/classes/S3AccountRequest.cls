@@ -1,6 +1,9 @@
 @JsonAccess(serializable='always' deserializable='always')
 global class S3AccountRequest {
   @AuraEnabled
+  global String accountName;
+
+  @AuraEnabled
   global String s3ObjectPath;
 
   @AuraEnabled

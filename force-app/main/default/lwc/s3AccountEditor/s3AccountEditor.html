@@ -1,35 +1,14 @@
 <template>
-  <lightning-card title="S3 Account Source" icon-name="utility:database">
+  <lightning-card title="Account Lookup" icon-name="standard:account">
     <div class="slds-var-p-horizontal_medium slds-var-p-bottom_medium">
       <lightning-input
-        label="S3 Object Path"
-        data-field="s3ObjectPath"
-        value={s3ObjectPath}
+        label="Account Name"
+        data-field="accountName"
+        value={accountName}
         type="text"
         required
         onchange={handleInputChange}
         read-only={readOnly}
-      >
-      </lightning-input>
-
-      <lightning-input
-        label="Bucket Override"
-        data-field="bucketOverride"
-        value={bucketOverride}
-        type="text"
-        onchange={handleInputChange}
-        read-only={readOnly}
-      >
-      </lightning-input>
-
-      <lightning-input
-        class="toggle-input"
-        label="Mock Mode"
-        data-field="mockMode"
-        checked={mockMode}
-        type="toggle"
-        onchange={handleInputChange}
-        disabled={readOnly}
       >
       </lightning-input>
     </div>

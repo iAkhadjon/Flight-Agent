@@ -5,14 +5,14 @@
     <botDialogs>
         <botSteps>
             <botMessages>
-                <message>Hi, I&apos;m Agentforce! I can collect account and contact details with a form and answer based on the submitted information. How can I help?</message>
-                <messageIdentifier>43e8bd92-3afc-4cdd-9444-9a3ce91cea67</messageIdentifier>
+                <message>Hi, I&apos;m Agentforce! I can collect account and contact details with a form, retrieve matching account data from S3, and answer based on the returned information. How can I help?</message>
+                <messageIdentifier>01eb6d5f-a472-4830-898d-e45ac7e74817</messageIdentifier>
             </botMessages>
-            <stepIdentifier>278c76f1-e4db-4be6-86a1-8b9f0b14e4a8</stepIdentifier>
+            <stepIdentifier>74c475af-d354-4fb3-acfb-812c4bb6068e</stepIdentifier>
             <type>Message</type>
         </botSteps>
         <botSteps>
-            <stepIdentifier>6cb90006-dd59-43ec-b6d3-4bf38f708e8c</stepIdentifier>
+            <stepIdentifier>1b07b883-f5cb-40b9-bc10-f7977d2acdca</stepIdentifier>
             <type>Wait</type>
         </botSteps>
         <developerName>Welcome</developerName>
@@ -24,13 +24,13 @@
         <botSteps>
             <botMessages>
                 <message>Something went wrong. Try again.</message>
-                <messageIdentifier>0a32520a-c5e7-4833-a543-07dd1187fbf9</messageIdentifier>
+                <messageIdentifier>61b0223e-2074-4f75-8041-23c3780c19bd</messageIdentifier>
             </botMessages>
-            <stepIdentifier>1e336af2-e578-45f4-be5e-d29608e8dce0</stepIdentifier>
+            <stepIdentifier>4e965bb4-f99f-4af2-8ee5-93645dcbbe11</stepIdentifier>
             <type>Message</type>
         </botSteps>
         <botSteps>
-            <stepIdentifier>78d24f86-7375-45c6-94bc-5853c1165138</stepIdentifier>
+            <stepIdentifier>279f8d88-8757-42c7-a1ca-a24980d776ec</stepIdentifier>
             <type>Wait</type>
         </botSteps>
         <developerName>Rich_Content_Error_Handling</developerName>
@@ -53,43 +53,11 @@
         <type>ErrorHandling</type>
     </conversationSystemDialogs>
     <conversationVariables>
-        <dataType>Boolean</dataType>
-        <description>Runtime condition evaluation for if statements</description>
-        <developerName>AgentScriptInternal_condition</developerName>
-        <includeInPrompt>false</includeInPrompt>
-        <label>Runtime Condition</label>
-        <visibility>Internal</visibility>
-    </conversationVariables>
-    <conversationVariables>
-        <dataType>Text</dataType>
-        <description>The API name of the current Salesforce object</description>
-        <developerName>currentObjectApiName</developerName>
-        <includeInPrompt>false</includeInPrompt>
-        <label>Current Object Api Name</label>
-        <visibility>External</visibility>
-    </conversationVariables>
-    <conversationVariables>
-        <dataType>Text</dataType>
-        <description>The Salesforce ID of the current record</description>
-        <developerName>currentRecordId</developerName>
-        <includeInPrompt>false</includeInPrompt>
-        <label>Current Record Id</label>
-        <visibility>External</visibility>
-    </conversationVariables>
-    <conversationVariables>
         <dataType>Text</dataType>
         <description>The agent instructions</description>
         <developerName>AgentScriptInternal_agent_instructions</developerName>
         <includeInPrompt>false</includeInPrompt>
         <label>Agent Instructions</label>
-        <visibility>Internal</visibility>
-    </conversationVariables>
-    <conversationVariables>
-        <dataType>Text</dataType>
-        <description>This variable may also be referred to as VerifiedCustomerId</description>
-        <developerName>VerifiedCustomerId</developerName>
-        <includeInPrompt>false</includeInPrompt>
-        <label>Verified Customer Id</label>
         <visibility>Internal</visibility>
     </conversationVariables>
     <conversationVariables>
@@ -109,11 +77,43 @@
         <visibility>Internal</visibility>
     </conversationVariables>
     <conversationVariables>
+        <dataType>Boolean</dataType>
+        <description>Runtime condition evaluation for if statements</description>
+        <developerName>AgentScriptInternal_condition</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Runtime Condition</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Text</dataType>
+        <description>The Salesforce ID of the current record</description>
+        <developerName>currentRecordId</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Current Record Id</label>
+        <visibility>External</visibility>
+    </conversationVariables>
+    <conversationVariables>
         <dataType>Text</dataType>
         <description>Page type (record, list, home)</description>
         <developerName>currentPageType</developerName>
         <includeInPrompt>false</includeInPrompt>
         <label>Current Page Type</label>
+        <visibility>External</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Text</dataType>
+        <description>This variable may also be referred to as VerifiedCustomerId</description>
+        <developerName>VerifiedCustomerId</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Verified Customer Id</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Text</dataType>
+        <description>The API name of the current Salesforce object</description>
+        <developerName>currentObjectApiName</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Current Object Api Name</label>
         <visibility>External</visibility>
     </conversationVariables>
     <copilotPrimaryLanguage>en_US</copilotPrimaryLanguage>

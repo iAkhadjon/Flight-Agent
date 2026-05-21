@@ -1,6 +1,6 @@
 # S3 Account Agentforce Setup
 
-This project adds an Agentforce action that retrieves `/account.json` from AWS S3 through the existing `AWS_S3_Demo` Named Credential and renders the structured result with a Custom Lightning Type.
+This project adds an Agentforce action that asks for an Account Name, retrieves account data from AWS S3 through the existing `AWS_S3_Demo` Named Credential, filters matching accounts, and renders the structured result with a Custom Lightning Type. The action tries `/accounts.json` by default and falls back to `/account.json` when the default object is unavailable.
 
 ## Metadata Included
 
@@ -9,7 +9,7 @@ This project adds an Agentforce action that retrieves `/account.json` from AWS S
 - Apex response type: `S3AccountResponse`
 - Apex DTOs: `S3AccountDTO`, `S3ContactDTO`
 - Output Custom Lightning Type: `c__s3AccountViewer`
-- Input/config Custom Lightning Type: `c__s3AccountRequest`
+- Input/account lookup Custom Lightning Type: `c__s3AccountRequest`
 - Output renderer LWC: `c/s3AccountRenderer`
 - Input editor LWC: `c/s3AccountEditor`
 - Permission set: `S3_Account_Agent_Access`
@@ -34,15 +34,16 @@ npm run test:unit
 1. In Setup or Agent Builder, create a new Agent Action from Apex.
 2. Select `S3AccountAgentAction`.
 3. Select the invocable method `Get Account Data From S3`.
-4. Use the `request` input only when you want to override the defaults:
-   - `s3ObjectPath`: defaults to `/account.json`.
-   - `bucketOverride`: optional. Use only when `AWS_S3_Demo` points at an S3 service root instead of a bucket root.
-   - `mockMode`: optional demo mode that returns sample account/contact data without a callout.
+4. Configure the `request` input as user input:
+   - `accountName`: required. Collected by the Account Lookup LWC form.
+   - `s3ObjectPath`: hidden compatibility field that defaults to `/accounts.json`; `/account.json` is also supported.
+   - `bucketOverride`: hidden optional compatibility field.
+   - `mockMode`: hidden optional demo mode.
 5. Expose the `accountData` output.
 
 ## Connect the Lightning Types
 
-1. For the action input `request`, select `c__s3AccountRequest` to use the `c/s3AccountEditor` configuration UI.
+1. For the action input `request`, select `c__s3AccountRequest` to use the `c/s3AccountEditor` Account Lookup UI.
 2. For the action output `accountData`, select `c__s3AccountViewer` to use the `c/s3AccountRenderer` output UI.
 3. Enable the renderer for the Lightning Desktop Agentforce surface. Enhanced Web Chat metadata is also included.
 4. Assign `S3_Account_Agent_Access` to the agent user or use the updated `AFDX_Agent_Perms` and `AFDX_User_Perms` permission set groups.
@@ -55,10 +56,10 @@ Use a prompt such as:
 Retrieve the account data from S3 and show the account details and contacts.
 ```
 
-For a custom path:
+Expected first agent response:
 
 ```text
-Retrieve account data from /account.json using the S3 account action.
+Please fill the form and submit.
 ```
 
-Expected result: the action calls `callout:AWS_S3_Demo/account.json`, parses the JSON into Apex DTOs, and renders account fields plus a contacts table.
+After the Account Name form is submitted, the action calls `callout:AWS_S3_Demo/accounts.json`. If that default object returns 403 or 404, it retries `callout:AWS_S3_Demo/account.json`. It then parses one or many account records into Apex DTOs, filters accounts by the submitted Account Name, and renders matching accounts plus related contacts.

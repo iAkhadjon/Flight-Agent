@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPlannerBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Collect account and contact details with custom LWC forms, retrieve matching account/contact data from AWS S3, then answer based on structured action outputs.</description>
+    <localTopicLinks>
+        <genAiPluginName>GeneralFAQ_16jgK000001SQzt</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>account_intake_16jgK000001SQzt</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>agent_router_16jgK000001SQzt</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>ambiguous_question_16jgK000001SQzt</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>off_topic_16jgK000001SQzt</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>s3_account_data_16jgK000001SQzt</genAiPluginName>
+    </localTopicLinks>
+    <localTopics>
+        <fullName>GeneralFAQ_16jgK000001SQzt</fullName>
+        <canEscalate>false</canEscalate>
+        <description>This topic is for helping answer customer&apos;s questions by searching through the knowledge articles and providing information from those articles. The questions can be about the company and its products, policies or business procedures</description>
+        <developerName>GeneralFAQ_16jgK000001SQzt</developerName>
+        <genAiPluginInstructions>
+            <description>You are an AI Agent. Use the Account Intake form when users need to submit account and contact details. Use the S3 Account Data form when users ask to retrieve or display account/contact data from AWS S3.
+
+The user&apos;s current context is:
+Current App Name: {{state.currentAppName}}
+Current Object Name: {{state.currentObjectApiName}}
+Current Page Type: {{state.currentPageType}}
+Current Record ID: {{state.currentRecordId}}</description>
+            <developerName>instruction0_179gK000001Xp1Z</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179gK000001Xp1Z</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>AnswerQuestionsWithKnowledge_179gK000001Xp1Z</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>AnswerQuestionsWithKnowledge_179gK000001Xp1Z</fullName>
+            <description>Answers questions about company policies and procedures, troubleshooting steps, or product information. For example: &apos;What is your return policy?&apos; &apos;How do I fix an issue?&apos; or &apos;What features does a product have?&apos;</description>
+            <developerName>AnswerQuestionsWithKnowledge_179gK000001Xp1Z</developerName>
+            <invocationTarget>streamKnowledgeSearch</invocationTarget>
+            <invocationTargetType>standardInvocableAction</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>AnswerQuestionsWithKnowledge</localDeveloperName>
+            <masterLabel>Answer Questions with Knowledge</masterLabel>
+            <progressIndicatorMessage>Getting answers</progressIndicatorMessage>
+            <source>EmployeeCopilot__AnswerQuestionsWithKnowledge</source>
+        </localActions>
+        <localDeveloperName>GeneralFAQ</localDeveloperName>
+        <masterLabel>General FAQ</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>off_topic_16jgK000001SQzt</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Redirect conversation to relevant topics when user request goes off-topic</description>
+        <developerName>off_topic_16jgK000001SQzt</developerName>
+        <genAiPluginInstructions>
+            <description>You are an AI Agent. Use the Account Intake form when users need to submit account and contact details. Use the S3 Account Data form when users ask to retrieve or display account/contact data from AWS S3.
+
+The user&apos;s current context is:
+Current App Name: {{state.currentAppName}}
+Current Object Name: {{state.currentObjectApiName}}
+Current Page Type: {{state.currentPageType}}
+Current Record ID: {{state.currentRecordId}}</description>
+            <developerName>instruction0_179gK000001Xp1e</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179gK000001Xp1e</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localDeveloperName>off_topic</localDeveloperName>
+        <masterLabel>Off Topic</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>s3_account_data_16jgK000001SQzt</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Collect an Account Name, retrieve matching account and contact data from AWS S3 through the AWS_S3_Demo Named Credential, then display the response with the S3 Account Viewer LWC.</description>
+        <developerName>s3_account_data_16jgK000001SQzt</developerName>
+        <genAiPluginInstructions>
+            <description>You are an AI Agent. Use the Account Intake form when users need to submit account and contact details. Use the S3 Account Data form when users ask to retrieve or display account/contact data from AWS S3.
+
+The user&apos;s current context is:
+Current App Name: {{state.currentAppName}}
+Current Object Name: {{state.currentObjectApiName}}
+Current Page Type: {{state.currentPageType}}
+Current Record ID: {{state.currentRecordId}}</description>
+            <developerName>instruction0_179gK000001Xp1c</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179gK000001Xp1c</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>get_account_data_from_s3_179gK000001Xp1c</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>get_account_data_from_s3_179gK000001Xp1c</fullName>
+            <description>Displays the Account Lookup form, collects Account Name, retrieves matching account and related contact data from AWS S3 using the AWS_S3_Demo Named Credential, and displays the result.</description>
+            <developerName>get_account_data_from_s3_179gK000001Xp1c</developerName>
+            <invocationTarget>S3AccountAgentAction</invocationTarget>
+            <invocationTargetType>apex</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>get_account_data_from_s3</localDeveloperName>
+            <masterLabel>Get Account Data From S3</masterLabel>
+            <progressIndicatorMessage>Retrieving account data from S3...</progressIndicatorMessage>
+        </localActions>
+        <localDeveloperName>s3_account_data</localDeveloperName>
+        <masterLabel>S3 Account Data</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>agent_router_16jgK000001SQzt</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Welcome the user and determine the appropriate subagent based on user input</description>
+        <developerName>agent_router_16jgK000001SQzt</developerName>
+        <genAiPluginInstructions>
+            <description>You are an AI Agent. Use the Account Intake form when users need to submit account and contact details. Use the S3 Account Data form when users ask to retrieve or display account/contact data from AWS S3.
+
+The user&apos;s current context is:
+Current App Name: {!@variables.currentAppName}
+Current Object Name: {!@variables.currentObjectApiName}
+Current Page Type: {!@variables.currentPageType}
+Current Record ID: {!@variables.currentRecordId}
+
+{{state.AgentScriptInternal_agent_instructions}}</description>
+            <developerName>instruction0_179gK000001Xp1d</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179gK000001Xp1d</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localDeveloperName>agent_router</localDeveloperName>
+        <masterLabel>Agent Router</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>ambiguous_question_16jgK000001SQzt</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Redirect conversation to relevant topics when user request is too ambiguous</description>
+        <developerName>ambiguous_question_16jgK000001SQzt</developerName>
+        <genAiPluginInstructions>
+            <description>You are an AI Agent. Use the Account Intake form when users need to submit account and contact details. Use the S3 Account Data form when users ask to retrieve or display account/contact data from AWS S3.
+
+The user&apos;s current context is:
+Current App Name: {{state.currentAppName}}
+Current Object Name: {{state.currentObjectApiName}}
+Current Page Type: {{state.currentPageType}}
+Current Record ID: {{state.currentRecordId}}</description>
+            <developerName>instruction0_179gK000001Xp1a</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179gK000001Xp1a</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localDeveloperName>ambiguous_question</localDeveloperName>
+        <masterLabel>Ambiguous Question</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>account_intake_16jgK000001SQzt</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Collect account name, phone, industry, contact name, and contact email using a custom LWC form, then answer based on the submitted details.</description>
+        <developerName>account_intake_16jgK000001SQzt</developerName>
+        <genAiPluginInstructions>
+            <description>You are an AI Agent. Use the Account Intake form when users need to submit account and contact details. Use the S3 Account Data form when users ask to retrieve or display account/contact data from AWS S3.
+
+The user&apos;s current context is:
+Current App Name: {{state.currentAppName}}
+Current Object Name: {{state.currentObjectApiName}}
+Current Page Type: {{state.currentPageType}}
+Current Record ID: {{state.currentRecordId}}</description>
+            <developerName>instruction0_179gK000001Xp1b</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179gK000001Xp1b</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>review_account_intake_179gK000001Xp1b</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>review_account_intake_179gK000001Xp1b</fullName>
+            <description>Display the Account Intake form using the c__accountIntake input rendering component, collect the form values, then generate a response based on the submitted account/contact details.</description>
+            <developerName>review_account_intake_179gK000001Xp1b</developerName>
+            <invocationTarget>AccountIntakeAgent</invocationTarget>
+            <invocationTargetType>apex</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>review_account_intake</localDeveloperName>
+            <masterLabel>Review Account Intake</masterLabel>
+            <progressIndicatorMessage>Reviewing account details...</progressIndicatorMessage>
+        </localActions>
+        <localDeveloperName>account_intake</localDeveloperName>
+        <masterLabel>Account Intake</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <masterLabel>API Call Display LWC</masterLabel>
+    <plannerType>Atlas__ConcurrentMultiAgentOrchestration</plannerType>
+</GenAiPlannerBundle>

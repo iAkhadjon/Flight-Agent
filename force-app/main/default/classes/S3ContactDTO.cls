@@ -4,6 +4,9 @@ global class S3ContactDTO {
   global String id;
 
   @AuraEnabled
+  global String accountId;
+
+  @AuraEnabled
   global String firstName;
 
   @AuraEnabled
